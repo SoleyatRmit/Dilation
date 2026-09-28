@@ -210,6 +210,31 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     pointer-events: none;
 }
 
+/* Pad labels. */
+.pad-label {
+    position: absolute;
+    left: 0.6rem;
+    color: #5a5a62;
+    font-size: 0.75rem;
+    pointer-events: none;
+}
+
+.pad-top {
+    top: 0.5rem;
+}
+
+.pad-bottom {
+    bottom: 0.5rem;
+}
+
+.pad-axis {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0;
+    color: #5a5a62;
+    font-size: 0.75rem;
+}
+
 /* The pad lights up while you hold it. */
 .pad:active {
     border-color: #6a6a78;
