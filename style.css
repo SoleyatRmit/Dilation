@@ -197,6 +197,12 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
 }
 
+/* Step counter. */
+.count {
+    margin-left: 0.5rem;
+    color: #5a5a62;
+}
+
 /* Next and Back, with Next always on the right. */
 .step-nav {
     display: flex;
