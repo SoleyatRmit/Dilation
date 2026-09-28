@@ -210,6 +210,15 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     pointer-events: none;
 }
 
+/* The pad lights up while you hold it. */
+.pad:active {
+    border-color: #6a6a78;
+}
+
+.pad:active .pad-dot {
+    background: #a0aac8;
+}
+
 #begin {
     width: 100%;
     padding: 1rem;

@@ -11,6 +11,9 @@ const setupForm = document.getElementById("setup");
 const beginBtn = document.getElementById("begin");
 const endBtn = document.getElementById("end");
 const warningEl = document.getElementById("warning");
+const pad = document.getElementById("pad");
+const pitchInput = setupForm.elements.pitch;
+const brightnessInput = setupForm.elements.brightness;
 
 let startInstant = null;
 let totalDuration = null;
@@ -32,6 +35,22 @@ function setState(state) {
 // Keeps a typed number whole and within range, using the minimum if it's empty.
 function clamp(value, min, max) {
     return Math.min(max, Math.max(min, Math.round(value) || min));
+}
+
+// Pad position, 0 to 1 on each axis, turned into pitch (65 to 165 Hz) and brightness (0.5 to 1.5).
+function setPad(x, y) {
+    x = Math.min(1, Math.max(0, x));
+    y = Math.min(1, Math.max(0, y));
+    pad.style.setProperty("--x", x);
+    pad.style.setProperty("--y", y);
+    pitchInput.value = (65 * Math.pow(165 / 65, x)).toFixed(2);
+    brightnessInput.value = (1.5 - y).toFixed(2);
+}
+
+// Where the pointer is inside the pad.
+function padPoint(event) {
+    const box = pad.getBoundingClientRect();
+    setPad((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
 }
 
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
@@ -177,6 +196,15 @@ function endSession() {
 
 setupForm.addEventListener("submit", beginSession);
 endBtn.addEventListener("click", endSession);
+
+// Dragging on the pad, which keeps working if the pointer leaves the box mid drag.
+pad.addEventListener("pointerdown", (event) => {
+    pad.setPointerCapture(event.pointerId);
+    padPoint(event);
+});
+pad.addEventListener("pointermove", (event) => {
+    if (pad.hasPointerCapture(event.pointerId)) padPoint(event);
+});
 
 // Escape ends the session.
 document.addEventListener("keydown", (event) => {
