@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dilation</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Stops Tone.js printing its banner, so it has to come before Tone.js. -->
+    <script>window.TONE_SILENCE_LOGGING = true;</script>
+
+    <!-- Tone.js makes the sound, the polyfill adds Temporal where the browser lacks it, and main.js runs once the page has loaded. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/temporal-polyfill@0.2.5/global.min.js"></script>
+    <script src="main.js" defer></script>
+</head>
+<body data-state="idle">
+    <!-- data-state is idle, running or ending, and CSS changes the screen to match. -->
+
+    <main>
+        <!-- The setup screen is a form, so Begin submits it and main.js reads the choices. -->
+        <form id="setup" novalidate>
+            <h1>Dilation</h1>
+            <p class="sub">Build a stretch of time, then stop looking.</p>
+
+            <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long below.</p>
+
+            <fieldset>
+                <legend>Length</legend>
+                <div class="options">
+                    <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
+                    <label><input type="radio" name="duration" value="60"><span>1 min</span></label>
+                    <label><input type="radio" name="duration" value="300"><span>5 min</span></label>
+                    <label><input type="radio" name="duration" value="1200"><span>20 min</span></label>
+                    <label><input type="radio" name="duration" value="custom"><span>Custom</span><span class="tip">Your own minutes and seconds, at least 10 seconds</span></label>
+                </div>
+                <!-- Only shown when Custom is picked. -->
+                <div class="fields custom-length">
+                    <label class="field">
+                        <input type="number" name="minutes" min="0" max="120" step="1" value="10">
+                        <span>min</span>
+                    </label>
+                    <label class="field">
+                        <input type="number" name="seconds" min="0" max="59" step="1" value="0">
+                        <span>sec</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Voice</legend>
+                <div class="options">
+                    <label><input type="radio" name="voice" value="glass" checked><span>Glass</span><span class="tip">Pure and soft</span></label>
+                    <label><input type="radio" name="voice" value="wood"><span>Wood</span><span class="tip">Hollow and warm</span></label>
+                    <label><input type="radio" name="voice" value="air"><span>Air</span><span class="tip">Richer and buzzier</span></label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Tuning</legend>
+                <div class="options">
+                    <label><input type="radio" name="tuning" value="73.42"><span>Deep</span><span class="tip">Lowest pitch</span></label>
+                    <label><input type="radio" name="tuning" value="110" checked><span>Middle</span><span class="tip">Middle pitch</span></label>
+                    <label><input type="radio" name="tuning" value="146.83"><span>Bright</span><span class="tip">Highest pitch</span></label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Fades</legend>
+                <div class="fields">
+                    <label class="field">
+                        <span>In</span>
+                        <input type="number" name="fadeIn" min="1" max="30" step="1" value="4">
+                        <span>sec</span>
+                        <span class="tip">How long the sound takes to rise, 1 to 30 seconds</span>
+                    </label>
+                    <label class="field">
+                        <span>Out</span>
+                        <input type="number" name="fadeOut" min="1" max="30" step="1" value="5">
+                        <span>sec</span>
+                        <span class="tip">How long the ending takes to fade, 1 to 30 seconds</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <button id="begin" type="submit">Begin</button>
+            <p id="warning" role="status"></p>
+        </form>
+
+        <div id="session">
+            <!-- One wave shape is defined once and drawn four times, all animated in CSS. Temporary stuff here.-->
+            <div class="waves" aria-hidden="true">
+                <svg class="defs">
+                    <defs>
+                        <path id="wave-path" vector-effect="non-scaling-stroke" d="M0 50 Q100 5 200 50 T400 50 T600 50 T800 50"/>
+                    </defs>
+                </svg>
+                <svg class="wave wave-1" viewBox="0 0 800 100" preserveAspectRatio="none"><use href="#wave-path"/></svg>
+                <svg class="wave wave-2" viewBox="0 0 800 100" preserveAspectRatio="none"><use href="#wave-path"/></svg>
+                <svg class="wave wave-3" viewBox="0 0 800 100" preserveAspectRatio="none"><use href="#wave-path"/></svg>
+                <svg class="wave wave-4" viewBox="0 0 800 100" preserveAspectRatio="none"><use href="#wave-path"/></svg>
+            </div>
+
+            <!-- End buttons -->
+            <button id="end" type="button">
+                <span class="label-running">End session</span>
+                <span class="label-ending">Ending</span>
+            </button>
+        </div>
+    </main>
+
+</body>
+</html>

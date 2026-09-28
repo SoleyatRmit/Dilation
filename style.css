@@ -1,0 +1,331 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    color-scheme: dark;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0d0d10;
+    color: #e8e8ea;
+    font-family: system-ui, sans-serif;
+}
+
+/* Show the screen that's going on right now */
+[data-state="running"] #setup,
+[data-state="ending"] #setup {
+    display: none;
+}
+
+[data-state="running"] #session,
+[data-state="ending"] #session {
+    display: block;
+}
+
+/* setup screen */
+
+#setup {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+}
+
+h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.sub {
+    margin: 0 0 2rem;
+    color: #8a8a92;
+    font-size: 0.9rem;
+}
+
+.notice {
+    margin: 0 0 3rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #2a2a30;
+    border-left: 2px solid #6a6a78;
+    border-radius: 4px;
+    color: #a8a8b2;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+fieldset {
+    margin: 0 0 2rem;
+    padding: 0;
+    border: none;
+}
+
+legend {
+    margin-bottom: 0.75rem;
+    padding: 0;
+    color: #8a8a92;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.options label {
+    position: relative;
+    flex: 1;
+    min-width: 72px;
+}
+
+.options input {
+    position: absolute;
+    opacity: 0;
+}
+
+.options input + span {
+    display: block;
+    padding: 0.7rem 0.5rem;
+    border: 1px solid #2a2a30;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.options input:checked + span {
+    border-color: #6a6a78;
+    background: #1a1a20;
+}
+
+.options input:focus-visible + span {
+    outline: 2px solid #6a6a78;
+}
+
+/* Number fields, used for a custom length and the fades. */
+.field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    color: #8a8a92;
+    font-size: 0.9rem;
+}
+
+.field input {
+    width: 4.5rem;
+    padding: 0.55rem 0.5rem;
+    border: 1px solid #2a2a30;
+    border-radius: 4px;
+    background: transparent;
+    color: #e8e8ea;
+    font: inherit;
+    text-align: center;
+}
+
+.field input:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
+.fields {
+    display: flex;
+    gap: 2rem;
+}
+
+.fields .field {
+    margin-top: 0;
+}
+
+/* The custom length fields only appear when Custom is clicked. */
+.custom-length {
+    display: none;
+    margin-top: 0.75rem;
+}
+
+fieldset:has(input[value="custom"]:checked) .custom-length {
+    display: flex;
+}
+
+#begin {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #6a6a78;
+    border-radius: 4px;
+    background: transparent;
+    color: #e8e8ea;
+    font: inherit;
+    cursor: pointer;
+}
+
+#begin:hover {
+    background: #1a1a20;
+}
+
+#begin:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#warning {
+    margin-top: 1rem;
+    color: #cc8888;
+    font-size: 0.85rem;
+}
+
+/* Tooltips shows after a short hover, or instantly when using a keyboard. */
+.field {
+    position: relative;
+}
+
+.tip {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    z-index: 1;
+    translate: -50% 0;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #3a3a44;
+    border-radius: 4px;
+    background: #1a1a20;
+    color: #c8c8d0;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms;
+}
+
+:is(.options label, .field):hover .tip {
+    opacity: 1;
+    transition-delay: 400ms;
+}
+
+:is(.options label, .field):has(:focus-visible) .tip {
+    opacity: 1;
+}
+
+/* session screen */
+
+#session {
+    display: none;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* Temporary wavy stuff for the session page */
+.defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.waves {
+    position: absolute;
+    inset: 0;
+    animation: dim 3s ease 30s forwards;
+}
+
+.wave {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    fill: none;
+    stroke: #a0aac8;
+    stroke-width: 1.5;
+    animation:
+        drift var(--drift) linear var(--offset) infinite,
+        bob var(--bob) ease-in-out infinite alternate;
+}
+
+.wave-1 { top: 28%; height: 12vh; opacity: 0.13; --drift: 70s; --offset: 0s;   --bob: 13s; }
+.wave-2 { top: 36%; height: 16vh; opacity: 0.11; --drift: 55s; --offset: -20s; --bob: 17s; }
+.wave-3 { top: 44%; height: 20vh; opacity: 0.09; --drift: 46s; --offset: -35s; --bob: 11s; }
+.wave-4 { top: 52%; height: 24vh; opacity: 0.07; --drift: 38s; --offset: -12s; --bob: 19s; }
+
+@keyframes drift {
+    to { transform: translateX(-50%); }
+}
+
+@keyframes bob {
+    to { translate: 0 1.5rem; }
+}
+
+#end {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.7rem 1.5rem;
+    border: 1px solid #3a3a44;
+    border-radius: 4px;
+    background: rgba(13, 13, 16, 0.85);
+    color: #e8e8ea;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    animation: fade-end 2s ease 30s forwards;
+}
+
+/* After 30 seconds the waves and End button dim, and hovering End brings it back. */
+@keyframes dim {
+    to { opacity: 0.4; }
+}
+
+@keyframes fade-end {
+    to { opacity: 0.2; }
+}
+
+#end:hover,
+#end:focus-visible {
+    animation: none;
+    opacity: 1;
+}
+
+#end:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
+/* Ending swaps the label, blocks clicks and fades to black along with the sound. */
+.label-ending {
+    display: none;
+}
+
+[data-state="ending"] .label-running {
+    display: none;
+}
+
+[data-state="ending"] .label-ending {
+    display: inline;
+}
+
+[data-state="ending"] #end {
+    pointer-events: none;
+}
+
+[data-state="ending"] #session {
+    opacity: 0;
+    transition: opacity var(--fade-out, 5s) linear;
+}
+
+/* The setup screen fades in unless reduced motion is on, in which case the waves also stay still. */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes fade-in {
+        from { opacity: 0; }
+    }
+
+    [data-state="idle"] #setup {
+        animation: fade-in 800ms ease both;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wave {
+        animation: none;
+    }
+}
