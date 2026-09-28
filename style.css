@@ -300,6 +300,17 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     to { opacity: 0.2; }
 }
 
+/* Esc hint on the End button. */
+#end kbd {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid #3a3a44;
+    border-radius: 3px;
+    color: #8a8a92;
+    font: inherit;
+    font-size: 0.75rem;
+}
+
 #end:hover,
 #end:focus-visible {
     animation: none;

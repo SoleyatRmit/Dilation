@@ -177,3 +177,8 @@ function endSession() {
 
 setupForm.addEventListener("submit", beginSession);
 endBtn.addEventListener("click", endSession);
+
+// Escape ends the session.
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") endSession();
+});
