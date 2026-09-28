@@ -20,6 +20,8 @@ let totalDuration = null;
 let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
+let preview = null;
+let pressing = false;
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -45,12 +47,56 @@ function setPad(x, y) {
     pad.style.setProperty("--y", y);
     pitchInput.value = (65 * Math.pow(165 / 65, x)).toFixed(2);
     brightnessInput.value = (1.5 - y).toFixed(2);
+    updatePreview();
 }
 
 // Where the pointer is inside the pad.
 function padPoint(event) {
     const box = pad.getBoundingClientRect();
     setPad((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+}
+
+// A quiet preview of the sound while the pad is held.
+async function startPreview() {
+    if (document.body.dataset.state !== "idle" || preview) return;
+    await Tone.start();
+    if (!pressing || preview) return;
+
+    const choices = new FormData(setupForm);
+    const preset = VOICES[choices.get("voice")];
+    const pitch = Number(pitchInput.value);
+
+    const gain = new Tone.Gain(0).toDestination();
+    const filter = new Tone.Filter({ type: "lowpass", frequency: 900, Q: 1 }).connect(gain);
+    const osc1 = new Tone.Oscillator({ frequency: pitch, type: preset.wave }).connect(filter);
+    const osc2 = new Tone.Oscillator({ frequency: pitch * 1.004, type: preset.wave }).connect(filter);
+    osc1.start();
+    osc2.start();
+    gain.gain.rampTo(0.2 * Number(choices.get("volume")), 0.15);
+
+    preview = { preset, gain, filter, osc1, osc2 };
+    updatePreview();
+}
+
+function updatePreview() {
+    if (!preview) return;
+    const pitch = Number(pitchInput.value);
+    preview.osc1.frequency.rampTo(pitch, 0.05);
+    preview.osc2.frequency.rampTo(pitch * 1.004, 0.05);
+    preview.filter.frequency.rampTo(900 * preview.preset.brightness * Number(brightnessInput.value), 0.05);
+}
+
+function stopPreview() {
+    pressing = false;
+    if (!preview) return;
+    const old = preview;
+    preview = null;
+    old.gain.gain.rampTo(0, 0.4);
+    setTimeout(() => {
+        old.osc1.stop();
+        old.osc2.stop();
+        [old.osc1, old.osc2, old.filter, old.gain].forEach(node => node.dispose());
+    }, 500);
 }
 
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
@@ -203,11 +249,14 @@ endBtn.addEventListener("click", endSession);
 // Dragging on the pad, which keeps working if the pointer leaves the box mid drag.
 pad.addEventListener("pointerdown", (event) => {
     pad.setPointerCapture(event.pointerId);
+    pressing = true;
+    startPreview();
     padPoint(event);
 });
 pad.addEventListener("pointermove", (event) => {
     if (pad.hasPointerCapture(event.pointerId)) padPoint(event);
 });
+pad.addEventListener("lostpointercapture", stopPreview);
 
 // Escape ends the session.
 document.addEventListener("keydown", (event) => {
