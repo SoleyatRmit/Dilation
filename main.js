@@ -123,7 +123,7 @@ async function beginSession(event) {
     const choices = new FormData(setupForm);
     const length = choices.get("duration");
     const voice = choices.get("voice");
-    const root = Number(choices.get("tuning"));
+    const root = Number(choices.get("pitch"));
     const fadeIn = clamp(Number(choices.get("fadeIn")), 1, 30);
     const volume = Number(choices.get("volume"));
     fadeOut = clamp(Number(choices.get("fadeOut")), 1, 30);

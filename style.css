@@ -187,6 +187,29 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
 }
 
+/* The pad, with the dot placed from --x and --y. */
+.pad {
+    position: relative;
+    height: 150px;
+    border: 1px solid #2a2a30;
+    border-radius: 4px;
+    background: #111116;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.pad-dot {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    top: calc(var(--y) * 100%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #a0aac8;
+    border-radius: 50%;
+    translate: -50% -50%;
+    pointer-events: none;
+}
+
 #begin {
     width: 100%;
     padding: 1rem;
