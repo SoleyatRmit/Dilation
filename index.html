@@ -24,6 +24,9 @@
     <main>
         <!-- The setup screen is a form, so Begin submits it and main.js reads the choices. -->
         <form id="setup" novalidate>
+            <!-- Catches Enter so it can't skip the steps. -->
+            <button type="submit" disabled hidden></button>
+
             <h1>Dilation</h1>
             <p class="sub">Build a stretch of time, then stop looking.</p>
 
