@@ -123,6 +123,7 @@ async function beginSession(event) {
     const voice = choices.get("voice");
     const root = Number(choices.get("tuning"));
     const fadeIn = clamp(Number(choices.get("fadeIn")), 1, 30);
+    const volume = Number(choices.get("volume"));
     fadeOut = clamp(Number(choices.get("fadeOut")), 1, 30);
 
     // CSS reads this so the screen fades out over the same time as the sound.

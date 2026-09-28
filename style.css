@@ -132,6 +132,19 @@ legend {
     outline: 2px solid #6a6a78;
 }
 
+/* The volume slider. */
+.volume {
+    margin-top: 0;
+}
+
+.volume input {
+    flex: 1;
+    width: auto;
+    padding: 0;
+    border: none;
+    accent-color: #a0aac8;
+}
+
 .fields {
     display: flex;
     gap: 2rem;
