@@ -138,6 +138,23 @@ legend {
     outline: 2px solid #6a6a78;
 }
 
+/* Up and down arrows on every number field. */
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 16px;
+    margin-left: 0.25rem;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M2 6 L5 3 L8 6' fill='none' stroke='%23a0aac8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2 10 L5 13 L8 10' fill='none' stroke='%23a0aac8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+    opacity: 0.45;
+    cursor: pointer;
+}
+
+input[type="number"]:hover::-webkit-inner-spin-button,
+input[type="number"]:focus::-webkit-inner-spin-button {
+    opacity: 1;
+}
+
 /* The volume slider. */
 .volume {
     margin-top: 0;
