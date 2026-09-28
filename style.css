@@ -417,6 +417,11 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     [data-state="idle"] #setup {
         animation: fade-in 800ms ease both;
     }
+
+    /* Steps fade in too. */
+    .step:target {
+        animation: fade-in 400ms ease both;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
