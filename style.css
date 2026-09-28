@@ -62,6 +62,16 @@ fieldset {
     border: none;
 }
 
+/* One step at a time. */
+.step {
+    display: none;
+}
+
+.step:target,
+#setup:not(:has(.step:target)) .step:first-of-type {
+    display: block;
+}
+
 legend {
     margin-bottom: 0.75rem;
     padding: 0;

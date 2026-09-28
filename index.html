@@ -27,9 +27,10 @@
             <h1>Dilation</h1>
             <p class="sub">Build a stretch of time, then stop looking.</p>
 
-            <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long below.</p>
+            <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long.</p>
 
-            <fieldset>
+            <!-- Steps, one shown at a time. -->
+            <fieldset class="step" id="length">
                 <legend>Length</legend>
                 <div class="options">
                     <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
@@ -51,7 +52,7 @@
                 </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset class="step" id="voice">
                 <legend>Voice</legend>
                 <div class="options">
                     <label><input type="radio" name="voice" value="glass" checked><span>Glass</span><span class="tip">Pure and soft</span></label>
@@ -60,7 +61,7 @@
                 </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset class="step" id="tuning">
                 <legend>Tuning</legend>
                 <div class="options">
                     <label><input type="radio" name="tuning" value="73.42"><span>Deep</span><span class="tip">Lowest pitch</span></label>
@@ -69,7 +70,7 @@
                 </div>
             </fieldset>
 
-            <fieldset>
+            <fieldset class="step" id="fades">
                 <legend>Fades</legend>
                 <div class="fields">
                     <label class="field">
@@ -87,7 +88,7 @@
                 </div>
             </fieldset>
             <!-- Volume -->
-            <fieldset>
+            <fieldset class="step" id="volume">
                 <legend>Volume</legend>
                 <label class="field volume">
                     <span>Quiet</span>
