@@ -54,7 +54,7 @@ function padPoint(event) {
 }
 
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
-function buildAudio(voice, root, fadeIn, volume) {
+function buildAudio(voice, root, fadeIn, volume, brightness) {
     const preset = VOICES[voice];
 
     const master = new Tone.Gain(0).toDestination();
@@ -78,6 +78,7 @@ function buildAudio(voice, root, fadeIn, volume) {
     return {
         preset,
         root,
+        brightness,
         master,
         filter,
         padGain,
@@ -96,7 +97,8 @@ function getProgress() {
 
 // Turns progress into sound across three phases: settling, steady and closing.
 function applyProgress(p) {
-    const b = audio.preset.brightness;
+    // The voice's brightness times the pad's.
+    const b = audio.preset.brightness * audio.brightness;
     let cutoff;
     let pad;
     let lift;
@@ -143,6 +145,7 @@ async function beginSession(event) {
     const length = choices.get("duration");
     const voice = choices.get("voice");
     const root = Number(choices.get("pitch"));
+    const brightness = Number(choices.get("brightness"));
     const fadeIn = clamp(Number(choices.get("fadeIn")), 1, 30);
     const volume = Number(choices.get("volume"));
     fadeOut = clamp(Number(choices.get("fadeOut")), 1, 30);
@@ -170,7 +173,7 @@ async function beginSession(event) {
         totalDuration = Temporal.Duration.from({ seconds: Number(length) });
     }
 
-    audio = buildAudio(voice, root, fadeIn, volume);
+    audio = buildAudio(voice, root, fadeIn, volume, brightness);
 
     tick();
     tickTimer = setInterval(tick, 250);
