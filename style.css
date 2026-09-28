@@ -197,6 +197,38 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
 }
 
+/* Next and Back, with Next always on the right. */
+.step-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0;
+}
+
+.step-nav a {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid #2a2a30;
+    border-radius: 4px;
+    color: #e8e8ea;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.step-nav a:hover {
+    background: #1a1a20;
+}
+
+.step-nav a:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
+.step-nav .next {
+    margin-left: auto;
+}
+
+.step #begin {
+    margin-top: 1rem;
+}
+
 #begin {
     width: 100%;
     padding: 1rem;
