@@ -30,7 +30,7 @@ body {
 #setup {
     max-width: 480px;
     margin: 0 auto;
-    padding: 4rem 1.5rem;
+    padding: 1.5rem 1.5rem 2rem;
 }
 
 h1 {
@@ -40,14 +40,14 @@ h1 {
 }
 
 .sub {
-    margin: 0 0 2rem;
+    margin: 0 0 1.25rem;
     color: #8a8a92;
     font-size: 0.9rem;
 }
 
 .notice {
-    margin: 0 0 3rem;
-    padding: 0.9rem 1rem;
+    margin: 0 0 1.5rem;
+    padding: 0.6rem 0.9rem;
     border: 1px solid #2a2a30;
     border-left: 2px solid #6a6a78;
     border-radius: 4px;
@@ -57,19 +57,19 @@ h1 {
 }
 
 fieldset {
-    margin: 0 0 2rem;
+    margin: 0 0 1rem;
     padding: 0;
     border: none;
 }
 
 /* Time and Sound groups. */
 .group {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .group h2 {
-    margin: 0 0 1.25rem;
-    padding-bottom: 0.5rem;
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.4rem;
     border-bottom: 1px solid #2a2a30;
     color: #c8c8d0;
     font-size: 1rem;
@@ -81,7 +81,7 @@ fieldset {
 }
 
 legend {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     padding: 0;
     color: #8a8a92;
     font-size: 0.8rem;
@@ -108,7 +108,7 @@ legend {
 
 .options input + span {
     display: block;
-    padding: 0.7rem 0.5rem;
+    padding: 0.6rem 0.5rem;
     border: 1px solid #2a2a30;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -207,7 +207,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 
 #begin {
     width: 100%;
-    padding: 1rem;
+    padding: 0.85rem;
     border: 1px solid #6a6a78;
     border-radius: 4px;
     background: transparent;
