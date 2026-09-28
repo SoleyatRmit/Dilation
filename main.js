@@ -96,13 +96,14 @@ function applyProgress(p) {
         const t = (p - 0.75) / 0.25;
         cutoff = (1800 - t * 1500) * b;
         pad = 0.3 * (1 - t);
-        lift = t * 6;
+        lift = t * 0.055;
     }
 
     audio.filter.frequency.rampTo(Math.max(120, cutoff), 0.5);
     audio.padGain.gain.rampTo(pad, 0.8);
-    audio.drone1.frequency.rampTo(audio.root + lift, 1);
-    audio.drone2.frequency.rampTo(audio.root * 1.004 + lift, 1);
+    // Same lift for every tuning, just under a semitone.
+    audio.drone1.frequency.rampTo(audio.root * (1 + lift), 1);
+    audio.drone2.frequency.rampTo(audio.root * 1.004 * (1 + lift), 1);
 }
 
 // The sound's clock runs four times a second and keeps going in a background tab.
