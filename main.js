@@ -258,6 +258,20 @@ pad.addEventListener("pointermove", (event) => {
 });
 pad.addEventListener("lostpointercapture", stopPreview);
 
+// Arrow keys move the pad too, and play the preview while held.
+pad.addEventListener("keydown", (event) => {
+    const moves = { ArrowLeft: [-0.05, 0], ArrowRight: [0.05, 0], ArrowUp: [0, -0.05], ArrowDown: [0, 0.05] };
+    const move = moves[event.key];
+    if (!move) return;
+    event.preventDefault();
+    pressing = true;
+    startPreview();
+    const x = Number(pad.style.getPropertyValue("--x")) + move[0];
+    const y = Number(pad.style.getPropertyValue("--y")) + move[1];
+    setPad(x, y);
+});
+pad.addEventListener("keyup", stopPreview);
+
 // Escape ends the session.
 document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") endSession();

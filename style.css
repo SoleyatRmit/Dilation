@@ -235,7 +235,11 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     font-size: 0.75rem;
 }
 
-/* The pad lights up while you hold it. */
+/* The pad lights up while you hold it or tab to it. */
+.pad:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
 .pad:active {
     border-color: #6a6a78;
 }
