@@ -29,72 +29,83 @@
 
             <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long below.</p>
 
-            <fieldset>
-                <legend>Length</legend>
-                <div class="options">
-                    <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
-                    <label><input type="radio" name="duration" value="60"><span>1 min</span></label>
-                    <label><input type="radio" name="duration" value="300"><span>5 min</span></label>
-                    <label><input type="radio" name="duration" value="1200"><span>20 min</span></label>
-                    <label><input type="radio" name="duration" value="custom"><span>Custom</span><span class="tip">Your own minutes and seconds, at least 10 seconds</span></label>
-                </div>
-                <!-- Only shown when Custom is picked. -->
-                <div class="fields custom-length">
-                    <label class="field">
-                        <input type="number" name="minutes" min="0" max="120" step="1" value="10">
-                        <span>min</span>
-                    </label>
-                    <label class="field">
-                        <input type="number" name="seconds" min="0" max="59" step="1" value="0">
-                        <span>sec</span>
-                    </label>
-                </div>
-            </fieldset>
+            <!-- Time settings -->
+            <section class="group">
+                <h2>Time</h2>
 
-            <fieldset>
-                <legend>Voice</legend>
-                <div class="options">
-                    <label><input type="radio" name="voice" value="glass" checked><span>Glass</span><span class="tip">Pure and soft</span></label>
-                    <label><input type="radio" name="voice" value="wood"><span>Wood</span><span class="tip">Hollow and warm</span></label>
-                    <label><input type="radio" name="voice" value="air"><span>Air</span><span class="tip">Richer and buzzier</span></label>
-                </div>
-            </fieldset>
+                <fieldset>
+                    <legend>Length</legend>
+                    <div class="options">
+                        <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
+                        <label><input type="radio" name="duration" value="60"><span>1 min</span></label>
+                        <label><input type="radio" name="duration" value="300"><span>5 min</span></label>
+                        <label><input type="radio" name="duration" value="1200"><span>20 min</span></label>
+                        <label><input type="radio" name="duration" value="custom"><span>Custom</span><span class="tip">Your own minutes and seconds, at least 10 seconds</span></label>
+                    </div>
+                    <!-- Only shown when Custom is picked. -->
+                    <div class="fields custom-length">
+                        <label class="field">
+                            <input type="number" name="minutes" min="0" max="120" step="1" value="10">
+                            <span>min</span>
+                        </label>
+                        <label class="field">
+                            <input type="number" name="seconds" min="0" max="59" step="1" value="0">
+                            <span>sec</span>
+                        </label>
+                    </div>
+                </fieldset>
 
-            <fieldset>
-                <legend>Tuning</legend>
-                <div class="options">
-                    <label><input type="radio" name="tuning" value="73.42"><span>Deep</span><span class="tip">Lowest pitch</span></label>
-                    <label><input type="radio" name="tuning" value="110" checked><span>Middle</span><span class="tip">Middle pitch</span></label>
-                    <label><input type="radio" name="tuning" value="146.83"><span>Bright</span><span class="tip">Highest pitch</span></label>
-                </div>
-            </fieldset>
+                <fieldset>
+                    <legend>Fades</legend>
+                    <div class="fields">
+                        <label class="field">
+                            <span>In</span>
+                            <input type="number" name="fadeIn" min="1" max="30" step="1" value="4">
+                            <span>sec</span>
+                            <span class="tip">How long the sound takes to rise, 1 to 30 seconds</span>
+                        </label>
+                        <label class="field">
+                            <span>Out</span>
+                            <input type="number" name="fadeOut" min="1" max="30" step="1" value="5">
+                            <span>sec</span>
+                            <span class="tip">How long the ending takes to fade, 1 to 30 seconds</span>
+                        </label>
+                    </div>
+                </fieldset>
+            </section>
 
-            <fieldset>
-                <legend>Fades</legend>
-                <div class="fields">
-                    <label class="field">
-                        <span>In</span>
-                        <input type="number" name="fadeIn" min="1" max="30" step="1" value="4">
-                        <span>sec</span>
-                        <span class="tip">How long the sound takes to rise, 1 to 30 seconds</span>
+            <!-- Sound settings -->
+            <section class="group">
+                <h2>Sound</h2>
+
+                <fieldset>
+                    <legend>Voice</legend>
+                    <div class="options">
+                        <label><input type="radio" name="voice" value="glass" checked><span>Glass</span><span class="tip">Pure and soft</span></label>
+                        <label><input type="radio" name="voice" value="wood"><span>Wood</span><span class="tip">Hollow and warm</span></label>
+                        <label><input type="radio" name="voice" value="air"><span>Air</span><span class="tip">Richer and buzzier</span></label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Tuning</legend>
+                    <div class="options">
+                        <label><input type="radio" name="tuning" value="73.42"><span>Deep</span><span class="tip">Lowest pitch</span></label>
+                        <label><input type="radio" name="tuning" value="110" checked><span>Middle</span><span class="tip">Middle pitch</span></label>
+                        <label><input type="radio" name="tuning" value="146.83"><span>Bright</span><span class="tip">Highest pitch</span></label>
+                    </div>
+                </fieldset>
+
+                <!-- Volume -->
+                <fieldset>
+                    <legend>Volume</legend>
+                    <label class="field volume">
+                        <span>Quiet</span>
+                        <input type="range" name="volume" min="0.1" max="1" step="0.05" value="0.6" aria-label="Volume">
+                        <span>Loud</span>
                     </label>
-                    <label class="field">
-                        <span>Out</span>
-                        <input type="number" name="fadeOut" min="1" max="30" step="1" value="5">
-                        <span>sec</span>
-                        <span class="tip">How long the ending takes to fade, 1 to 30 seconds</span>
-                    </label>
-                </div>
-            </fieldset>
-            <!-- Volume -->
-            <fieldset>
-                <legend>Volume</legend>
-                <label class="field volume">
-                    <span>Quiet</span>
-                    <input type="range" name="volume" min="0.1" max="1" step="0.05" value="0.6" aria-label="Volume">
-                    <span>Loud</span>
-                </label>
-            </fieldset>
+                </fieldset>
+            </section>
 
             <button id="begin" type="submit">Begin</button>
             <p id="warning" role="status"></p>

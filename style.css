@@ -62,6 +62,24 @@ fieldset {
     border: none;
 }
 
+/* Time and Sound groups. */
+.group {
+    margin-bottom: 2.5rem;
+}
+
+.group h2 {
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #2a2a30;
+    color: #c8c8d0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.group fieldset:last-child {
+    margin-bottom: 0;
+}
+
 legend {
     margin-bottom: 0.75rem;
     padding: 0;
