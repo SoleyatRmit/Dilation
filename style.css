@@ -98,6 +98,12 @@ legend {
     cursor: pointer;
 }
 
+/* Hover states. */
+.options input:not(:checked) + span:hover,
+.field input:hover {
+    border-color: #3a3a44;
+}
+
 .options input:checked + span {
     border-color: #6a6a78;
     background: #1a1a20;
