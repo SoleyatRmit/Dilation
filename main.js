@@ -35,7 +35,7 @@ function clamp(value, min, max) {
 }
 
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
-function buildAudio(voice, root, fadeIn) {
+function buildAudio(voice, root, fadeIn, volume) {
     const preset = VOICES[voice];
 
     const master = new Tone.Gain(0).toDestination();
@@ -53,7 +53,8 @@ function buildAudio(voice, root, fadeIn) {
     const oscillators = [drone1, drone2, pad1, pad2];
     oscillators.forEach(osc => osc.start());
 
-    master.gain.rampTo(0.25, fadeIn);
+    // Master level, set by the volume slider.
+    master.gain.rampTo(0.4 * volume, fadeIn);
 
     return {
         preset,
@@ -149,7 +150,7 @@ async function beginSession(event) {
         totalDuration = Temporal.Duration.from({ seconds: Number(length) });
     }
 
-    audio = buildAudio(voice, root, fadeIn);
+    audio = buildAudio(voice, root, fadeIn, volume);
 
     tick();
     tickTimer = setInterval(tick, 250);
