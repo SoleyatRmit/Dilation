@@ -17,6 +17,7 @@ let totalDuration = null;
 let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
+let chimes = [];
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -56,6 +57,16 @@ function buildAudio(voice, root, fadeIn, volume) {
     // Master level, set by the volume slider.
     master.gain.rampTo(0.4 * volume, fadeIn);
 
+    // Chime synth, in tune with the drone and following the volume slider.
+    const chimeGain = new Tone.Gain(0.4 * volume).toDestination();
+    const chimeReverb = new Tone.Reverb({ decay: 4, wet: 0.35 }).connect(chimeGain);
+    const chime = new Tone.FMSynth({
+        harmonicity: 5,
+        modulationIndex: 1.5,
+        envelope: { attack: 0.002, decay: 20, sustain: 0, release: 20 },
+        modulationEnvelope: { attack: 0.002, decay: 10, sustain: 0, release: 10 }
+    }).connect(chimeReverb);
+
     return {
         preset,
         root,
@@ -65,7 +76,9 @@ function buildAudio(voice, root, fadeIn, volume) {
         drone1,
         drone2,
         oscillators,
-        nodes: [...oscillators, droneGain, padGain, filter, reverb, master]
+        nodes: [...oscillators, droneGain, padGain, filter, reverb, master],
+        chime,
+        chimeNodes: [chime, chimeReverb, chimeGain]
     };
 }
 
@@ -106,10 +119,28 @@ function applyProgress(p) {
     audio.drone2.frequency.rampTo(audio.root * 1.004 * (1 + lift), 1);
 }
 
+// Closing-in chimes at 1/2, 3/4, 7/8 and 15/16 of the session, worked out with Temporal.
+function planChimes() {
+    const total = totalDuration.total("milliseconds");
+    return [0.5, 0.75, 0.875, 0.9375].map(f => startInstant.add({ milliseconds: Math.round(total * f) }));
+}
+
+// Plays a chime once its moment has come. If the tab was asleep and several are due, it plays just one.
+function playDueChimes() {
+    const now = Temporal.Now.instant();
+    let due = false;
+    while (chimes.length && Temporal.Instant.compare(now, chimes[0]) >= 0) {
+        chimes.shift();
+        due = true;
+    }
+    if (due) audio.chime.triggerAttackRelease(audio.root * 4, 1);
+}
+
 // The sound's clock runs four times a second and keeps going in a background tab.
 function tick() {
     const p = getProgress();
     applyProgress(p);
+    playDueChimes();
     if (p >= 1) {
         endSession();
     }
@@ -152,6 +183,7 @@ async function beginSession(event) {
     }
 
     audio = buildAudio(voice, root, fadeIn, volume);
+    chimes = planChimes();
 
     tick();
     tickTimer = setInterval(tick, 250);
@@ -167,6 +199,9 @@ function endSession() {
     const fading = audio;
     audio = null;
     fading.master.gain.rampTo(0, fadeOut);
+
+    // Chimes can still be ringing, so they're cleaned up later.
+    setTimeout(() => fading.chimeNodes.forEach(node => node.dispose()), 12000);
 
     setTimeout(() => {
         setState("idle");
