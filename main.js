@@ -56,6 +56,15 @@ function buildAudio(voice, root, fadeIn, volume) {
     // Master level, set by the volume slider.
     master.gain.rampTo(0.4 * volume, fadeIn);
 
+    // End bell, outside the master so the fade doesn't cut it off.
+    const bellGain = new Tone.Gain(0.3).toDestination();
+    const bell = new Tone.FMSynth({
+        harmonicity: 2.76,
+        modulationIndex: 2.5,
+        envelope: { attack: 0.005, decay: 60, sustain: 0, release: 60 },
+        modulationEnvelope: { attack: 0.005, decay: 30, sustain: 0, release: 30 }
+    }).connect(bellGain);
+
     return {
         preset,
         root,
@@ -65,7 +74,9 @@ function buildAudio(voice, root, fadeIn, volume) {
         drone1,
         drone2,
         oscillators,
-        nodes: [...oscillators, droneGain, padGain, filter, reverb, master]
+        nodes: [...oscillators, droneGain, padGain, filter, reverb, master],
+        bell,
+        bellNodes: [bell, bellGain]
     };
 }
 
@@ -104,6 +115,11 @@ function applyProgress(p) {
     // Same lift for every tuning, just under a semitone.
     audio.drone1.frequency.rampTo(audio.root * (1 + lift), 1);
     audio.drone2.frequency.rampTo(audio.root * 1.004 * (1 + lift), 1);
+}
+
+// A soft bell to mark the end.
+function ringBell() {
+    audio.bell.triggerAttackRelease(440, 4);
 }
 
 // The sound's clock runs four times a second and keeps going in a background tab.
@@ -163,10 +179,14 @@ function endSession() {
 
     setState("ending");
     clearInterval(tickTimer);
+    ringBell();
 
     const fading = audio;
     audio = null;
     fading.master.gain.rampTo(0, fadeOut);
+
+    // The bell rings on after the fade, so it gets cleaned up later.
+    setTimeout(() => fading.bellNodes.forEach(node => node.dispose()), 12000);
 
     setTimeout(() => {
         setState("idle");
