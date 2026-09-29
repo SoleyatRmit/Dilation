@@ -19,6 +19,7 @@ let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
 let countdownTimer = null;
+let volumeLevel = 0.6;
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -128,6 +129,7 @@ async function beginSession(event) {
     const root = Number(choices.get("tuning"));
     const fadeIn = clamp(Number(choices.get("fadeIn")), 1, 30);
     const volume = Number(choices.get("volume"));
+    volumeLevel = volume;
     fadeOut = clamp(Number(choices.get("fadeOut")), 1, 30);
 
     // CSS reads this so the screen fades out over the same time as the sound.
@@ -160,11 +162,21 @@ async function beginSession(event) {
 }
 
 // Counts the fade out down on screen, one number a second, timed with Temporal.
-function startCountdown() {
+function startCountdown(root) {
     const fadeEnd = Temporal.Now.instant().add({ seconds: fadeOut });
+
+    // A soft tick with each number, so the countdown works with your eyes closed.
+    const tickGain = new Tone.Gain(0.35 * volumeLevel).toDestination();
+    const tick = new Tone.Synth({ envelope: { attack: 0.001, decay: 0.12, sustain: 0, release: 0.05 } }).connect(tickGain);
+    setTimeout(() => [tick, tickGain].forEach(node => node.dispose()), (fadeOut + 1) * 1000);
+
+    let shown = null;
     const show = () => {
         const left = fadeEnd.since(Temporal.Now.instant()).total("seconds");
-        countdownEl.textContent = left > 0 ? Math.ceil(left) : "";
+        const number = left > 0 ? Math.ceil(left) : "";
+        if (number !== shown && number !== "") tick.triggerAttackRelease(root * 8, 0.05);
+        shown = number;
+        countdownEl.textContent = number;
     };
     show();
     countdownTimer = setInterval(show, 100);
@@ -176,7 +188,7 @@ function endSession() {
 
     setState("ending");
     clearInterval(tickTimer);
-    startCountdown();
+    startCountdown(audio.root);
 
     const fading = audio;
     audio = null;
