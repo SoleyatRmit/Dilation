@@ -127,7 +127,9 @@ function ringBell() {
 function tick() {
     const p = getProgress();
     applyProgress(p);
+    // The bell only rings when time runs out, not when you end it yourself.
     if (p >= 1) {
+        ringBell();
         endSession();
     }
 }
@@ -180,7 +182,6 @@ function endSession() {
 
     setState("ending");
     clearInterval(tickTimer);
-    ringBell();
 
     const fading = audio;
     audio = null;
