@@ -369,8 +369,9 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: inline;
 }
 
+/* The countdown already says it's ending, so the button goes. */
 [data-state="ending"] #end {
-    pointer-events: none;
+    display: none;
 }
 
 [data-state="ending"] #session {
