@@ -56,8 +56,8 @@ function buildAudio(voice, root, fadeIn, volume) {
     // Master level, set by the volume slider.
     master.gain.rampTo(0.4 * volume, fadeIn);
 
-    // End bell, outside the master so the fade doesn't cut it off.
-    const bellGain = new Tone.Gain(0.3).toDestination();
+    // End bell, outside the master so the fade doesn't cut it off. Follows the volume slider.
+    const bellGain = new Tone.Gain(0.5 * volume).toDestination();
     const bell = new Tone.FMSynth({
         harmonicity: 2.76,
         modulationIndex: 2.5,
