@@ -119,10 +119,19 @@ function applyProgress(p) {
     audio.drone2.frequency.rampTo(audio.root * 1.004 * (1 + lift), 1);
 }
 
-// Closing-in chimes at 1/2, 3/4, 7/8 and 15/16 of the session, worked out with Temporal.
+// Closing-in chimes: halfway, then halfway through whatever's left, again and again,
+// stopping before they'd be under 1.5 s apart. Worked out with Temporal.
 function planChimes() {
     const total = totalDuration.total("milliseconds");
-    return [0.5, 0.75, 0.875, 0.9375].map(f => startInstant.add({ milliseconds: Math.round(total * f) }));
+    const plan = [];
+    let gap = total / 2;
+    let at = gap;
+    while (gap >= 1500) {
+        plan.push(startInstant.add({ milliseconds: Math.round(at) }));
+        gap /= 2;
+        at += gap;
+    }
+    return plan;
 }
 
 // Plays a chime once its moment has come. If the tab was asleep and several are due, it plays just one.
