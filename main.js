@@ -19,6 +19,7 @@ let tickTimer = null;
 let fadeOut = 5;
 let chimes = [];
 let chimesRung = 0;
+let chimesPlanned = 0;
 
 // Steps up a pentatonic scale, one per chime.
 const RISE = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2, 3];
@@ -150,7 +151,9 @@ function playDueChimes() {
 
     // Each chime is a step higher, so they rise as the end gets closer.
     const step = RISE[Math.min(chimesRung, RISE.length - 1)];
-    audio.chime.triggerAttackRelease(audio.root * 4 * step, 1);
+    // They also start soft and get louder, so the first one doesn't startle anyone.
+    const loudness = chimesPlanned > 1 ? 0.35 + 0.65 * chimesRung / (chimesPlanned - 1) : 1;
+    audio.chime.triggerAttackRelease(audio.root * 4 * step, 1, undefined, loudness);
     chimesRung++;
 }
 
@@ -203,6 +206,7 @@ async function beginSession(event) {
     audio = buildAudio(voice, root, fadeIn, volume);
     chimes = planChimes();
     chimesRung = 0;
+    chimesPlanned = chimes.length;
 
     tick();
     tickTimer = setInterval(tick, 250);
