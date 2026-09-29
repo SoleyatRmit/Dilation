@@ -10,6 +10,7 @@ const VOICES = {
 const setupForm = document.getElementById("setup");
 const beginBtn = document.getElementById("begin");
 const endBtn = document.getElementById("end");
+const countdownEl = document.getElementById("countdown");
 const warningEl = document.getElementById("warning");
 
 let startInstant = null;
@@ -17,6 +18,7 @@ let totalDuration = null;
 let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
+let countdownTimer = null;
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -157,12 +159,24 @@ async function beginSession(event) {
     tickTimer = setInterval(tick, 250);
 }
 
+// Counts the fade out down on screen, one number a second, timed with Temporal.
+function startCountdown() {
+    const fadeEnd = Temporal.Now.instant().add({ seconds: fadeOut });
+    const show = () => {
+        const left = fadeEnd.since(Temporal.Now.instant()).total("seconds");
+        countdownEl.textContent = left > 0 ? Math.ceil(left) : "";
+    };
+    show();
+    countdownTimer = setInterval(show, 100);
+}
+
 // Fades the sound out, then cleans up the audio and returns to setup.
 function endSession() {
     if (document.body.dataset.state !== "running" || !audio) return;
 
     setState("ending");
     clearInterval(tickTimer);
+    startCountdown();
 
     const fading = audio;
     audio = null;
@@ -170,6 +184,8 @@ function endSession() {
 
     setTimeout(() => {
         setState("idle");
+        clearInterval(countdownTimer);
+        countdownEl.textContent = "";
         fading.oscillators.forEach(osc => osc.stop());
         fading.nodes.forEach(node => node.dispose());
     }, (fadeOut + 0.5) * 1000);
