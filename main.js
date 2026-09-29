@@ -18,6 +18,10 @@ let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
 let chimes = [];
+let chimesRung = 0;
+
+// Steps up a pentatonic scale, one per chime.
+const RISE = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4, 5 / 2, 3];
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -142,7 +146,12 @@ function playDueChimes() {
         chimes.shift();
         due = true;
     }
-    if (due) audio.chime.triggerAttackRelease(audio.root * 4, 1);
+    if (!due) return;
+
+    // Each chime is a step higher, so they rise as the end gets closer.
+    const step = RISE[Math.min(chimesRung, RISE.length - 1)];
+    audio.chime.triggerAttackRelease(audio.root * 4 * step, 1);
+    chimesRung++;
 }
 
 // The sound's clock runs four times a second and keeps going in a background tab.
@@ -193,6 +202,7 @@ async function beginSession(event) {
 
     audio = buildAudio(voice, root, fadeIn, volume);
     chimes = planChimes();
+    chimesRung = 0;
 
     tick();
     tickTimer = setInterval(tick, 250);
