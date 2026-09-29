@@ -58,12 +58,13 @@ function buildAudio(voice, root, fadeIn, volume) {
 
     // End bell, outside the master so the fade doesn't cut it off. Follows the volume slider.
     const bellGain = new Tone.Gain(0.5 * volume).toDestination();
+    const bellReverb = new Tone.Reverb({ decay: 6, wet: 0.4 }).connect(bellGain);
     const bell = new Tone.FMSynth({
         harmonicity: 2.76,
         modulationIndex: 2.5,
         envelope: { attack: 0.005, decay: 60, sustain: 0, release: 60 },
         modulationEnvelope: { attack: 0.005, decay: 30, sustain: 0, release: 30 }
-    }).connect(bellGain);
+    }).connect(bellReverb);
 
     return {
         preset,
@@ -76,7 +77,7 @@ function buildAudio(voice, root, fadeIn, volume) {
         oscillators,
         nodes: [...oscillators, droneGain, padGain, filter, reverb, master],
         bell,
-        bellNodes: [bell, bellGain]
+        bellNodes: [bell, bellReverb, bellGain]
     };
 }
 
