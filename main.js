@@ -134,13 +134,13 @@ function applyProgress(p) {
 }
 
 // Closing-in chimes: halfway, then halfway through whatever's left, again and again,
-// stopping before they'd be under 1.5 s apart. Worked out with Temporal.
+// stopping before they'd be under 1.2 s apart. Worked out with Temporal.
 function planChimes() {
     const total = totalDuration.total("milliseconds");
     const plan = [];
     let gap = total / 2;
     let at = gap;
-    while (gap >= 1500) {
+    while (gap >= 1200) {
         plan.push(startInstant.add({ milliseconds: Math.round(at) }));
         gap /= 2;
         at += gap;
