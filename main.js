@@ -117,9 +117,9 @@ function applyProgress(p) {
     audio.drone2.frequency.rampTo(audio.root * 1.004 * (1 + lift), 1);
 }
 
-// A soft bell to mark the end.
+// A soft bell two octaves above the drone, so it's in tune with any tuning.
 function ringBell() {
-    audio.bell.triggerAttackRelease(440, 4);
+    audio.bell.triggerAttackRelease(audio.root * 4, 4);
 }
 
 // The sound's clock runs four times a second and keeps going in a background tab.
