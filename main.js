@@ -72,6 +72,14 @@ function buildAudio(voice, root, fadeIn, volume) {
         modulationEnvelope: { attack: 0.002, decay: 10, sustain: 0, release: 10 }
     }).connect(chimeReverb);
 
+    // The final chime: lower and longer than the rest, so the end is clear without counting.
+    const endChime = new Tone.FMSynth({
+        harmonicity: 5,
+        modulationIndex: 1.5,
+        envelope: { attack: 0.002, decay: 60, sustain: 0, release: 60 },
+        modulationEnvelope: { attack: 0.002, decay: 30, sustain: 0, release: 30 }
+    }).connect(chimeReverb);
+
     return {
         preset,
         root,
@@ -83,7 +91,8 @@ function buildAudio(voice, root, fadeIn, volume) {
         oscillators,
         nodes: [...oscillators, droneGain, padGain, filter, reverb, master],
         chime,
-        chimeNodes: [chime, chimeReverb, chimeGain]
+        endChime,
+        chimeNodes: [chime, endChime, chimeReverb, chimeGain]
     };
 }
 
@@ -157,12 +166,19 @@ function playDueChimes() {
     chimesRung++;
 }
 
+// The rising chimes build up, and this one drops back to the home note an octave above the drone.
+function ringEndChime() {
+    audio.endChime.triggerAttackRelease(audio.root * 2, 4);
+}
+
 // The sound's clock runs four times a second and keeps going in a background tab.
 function tick() {
     const p = getProgress();
     applyProgress(p);
     playDueChimes();
+    // The end chime only rings when time runs out, not when you end it yourself.
     if (p >= 1) {
+        ringEndChime();
         endSession();
     }
 }
