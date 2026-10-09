@@ -24,13 +24,17 @@
     <main>
         <!-- The setup screen is a form, so Begin submits it and main.js reads the choices. -->
         <form id="setup" novalidate>
+            <!-- Catches Enter so it can't skip the steps. -->
+            <button type="submit" disabled hidden></button>
+
             <h1>Dilation</h1>
             <p class="sub">Build a stretch of time, then stop looking.</p>
 
-            <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long below.</p>
+            <p class="notice">This instrument makes sound. Check your volume before you begin. The sound fades in rather than starting at full volume, and you can set how long.</p>
 
-            <fieldset>
-                <legend>Length</legend>
+            <!-- Steps, one shown at a time. -->
+            <fieldset class="step" id="length">
+                <legend>Length <span class="count">1 of 5</span></legend>
                 <div class="options">
                     <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
                     <label><input type="radio" name="duration" value="60"><span>1 min</span></label>
@@ -49,19 +53,26 @@
                         <span>sec</span>
                     </label>
                 </div>
+                <p class="step-nav">
+                    <a class="next" href="#voice">Next</a>
+                </p>
             </fieldset>
 
-            <fieldset>
-                <legend>Voice</legend>
+            <fieldset class="step" id="voice">
+                <legend>Voice <span class="count">2 of 5</span></legend>
                 <div class="options">
                     <label><input type="radio" name="voice" value="glass" checked><span>Glass</span><span class="tip">Pure and soft</span></label>
                     <label><input type="radio" name="voice" value="wood"><span>Wood</span><span class="tip">Hollow and warm</span></label>
                     <label><input type="radio" name="voice" value="air"><span>Air</span><span class="tip">Richer and buzzier</span></label>
                 </div>
+                <p class="step-nav">
+                    <a href="#length">Back</a>
+                    <a class="next" href="#tone">Next</a>
+                </p>
             </fieldset>
 
-            <fieldset>
-                <legend>Tone</legend>
+            <fieldset class="step" id="tone">
+                <legend>Tone <span class="count">3 of 5</span></legend>
                 <!-- Pad: left to right is pitch, up and down is brightness. -->
                 <div class="pad" id="pad" style="--x: 0.565; --y: 0.5" tabindex="0" aria-label="Tone pad. Arrow keys change pitch and brightness.">
                     <span class="pad-label pad-top">Bright</span>
@@ -71,10 +82,14 @@
                 <p class="pad-axis"><span>Low pitch</span><span>Drag to hear it</span><span>High pitch</span></p>
                 <input type="hidden" name="pitch" value="110">
                 <input type="hidden" name="brightness" value="1">
+                <p class="step-nav">
+                    <a href="#voice">Back</a>
+                    <a class="next" href="#fades">Next</a>
+                </p>
             </fieldset>
 
-            <fieldset>
-                <legend>Fades</legend>
+            <fieldset class="step" id="fades">
+                <legend>Fades <span class="count">4 of 5</span></legend>
                 <div class="fields">
                     <label class="field">
                         <span>In</span>
@@ -89,18 +104,25 @@
                         <span class="tip">How long the ending takes to fade, 1 to 30 seconds</span>
                     </label>
                 </div>
+                <p class="step-nav">
+                    <a href="#tone">Back</a>
+                    <a class="next" href="#volume">Next</a>
+                </p>
             </fieldset>
             <!-- Volume -->
-            <fieldset>
-                <legend>Volume</legend>
+            <fieldset class="step" id="volume">
+                <legend>Volume <span class="count">5 of 5</span></legend>
                 <label class="field volume">
                     <span>Quiet</span>
                     <input type="range" name="volume" min="0.1" max="1" step="0.05" value="0.6" aria-label="Volume">
                     <span>Loud</span>
                 </label>
+                <p class="step-nav">
+                    <a href="#fades">Back</a>
+                </p>
+                <button id="begin" type="submit">Begin</button>
             </fieldset>
 
-            <button id="begin" type="submit">Begin</button>
             <p id="warning" role="status"></p>
         </form>
 
