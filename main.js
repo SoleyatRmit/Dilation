@@ -11,12 +11,17 @@ const setupForm = document.getElementById("setup");
 const beginBtn = document.getElementById("begin");
 const endBtn = document.getElementById("end");
 const warningEl = document.getElementById("warning");
+const pad = document.getElementById("pad");
+const pitchInput = setupForm.elements.pitch;
+const brightnessInput = setupForm.elements.brightness;
 
 let startInstant = null;
 let totalDuration = null;
 let audio = null;
 let tickTimer = null;
 let fadeOut = 5;
+let preview = null;
+let pressing = false;
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -34,8 +39,68 @@ function clamp(value, min, max) {
     return Math.min(max, Math.max(min, Math.round(value) || min));
 }
 
+// Pad position, 0 to 1 on each axis, turned into pitch (65 to 165 Hz) and brightness (0.5 to 1.5).
+function setPad(x, y) {
+    x = Math.min(1, Math.max(0, x));
+    y = Math.min(1, Math.max(0, y));
+    pad.style.setProperty("--x", x);
+    pad.style.setProperty("--y", y);
+    pitchInput.value = (65 * Math.pow(165 / 65, x)).toFixed(2);
+    brightnessInput.value = (1.5 - y).toFixed(2);
+    updatePreview();
+}
+
+// Where the pointer is inside the pad.
+function padPoint(event) {
+    const box = pad.getBoundingClientRect();
+    setPad((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+}
+
+// A quiet preview of the sound while the pad is held.
+async function startPreview() {
+    if (document.body.dataset.state !== "idle" || preview) return;
+    await Tone.start();
+    if (!pressing || preview) return;
+
+    const choices = new FormData(setupForm);
+    const preset = VOICES[choices.get("voice")];
+    const pitch = Number(pitchInput.value);
+
+    const gain = new Tone.Gain(0).toDestination();
+    const filter = new Tone.Filter({ type: "lowpass", frequency: 900, Q: 1 }).connect(gain);
+    const osc1 = new Tone.Oscillator({ frequency: pitch, type: preset.wave }).connect(filter);
+    const osc2 = new Tone.Oscillator({ frequency: pitch * 1.004, type: preset.wave }).connect(filter);
+    osc1.start();
+    osc2.start();
+    gain.gain.rampTo(0.2 * Number(choices.get("volume")), 0.15);
+
+    preview = { preset, gain, filter, osc1, osc2 };
+    updatePreview();
+}
+
+function updatePreview() {
+    if (!preview) return;
+    const pitch = Number(pitchInput.value);
+    preview.osc1.frequency.rampTo(pitch, 0.05);
+    preview.osc2.frequency.rampTo(pitch * 1.004, 0.05);
+    preview.filter.frequency.rampTo(900 * preview.preset.brightness * Number(brightnessInput.value), 0.05);
+}
+
+function stopPreview() {
+    pressing = false;
+    if (!preview) return;
+    const old = preview;
+    preview = null;
+    old.gain.gain.rampTo(0, 0.4);
+    setTimeout(() => {
+        old.osc1.stop();
+        old.osc2.stop();
+        [old.osc1, old.osc2, old.filter, old.gain].forEach(node => node.dispose());
+    }, 500);
+}
+
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
-function buildAudio(voice, root, fadeIn, volume) {
+function buildAudio(voice, root, fadeIn, volume, brightness) {
     const preset = VOICES[voice];
 
     const master = new Tone.Gain(0).toDestination();
@@ -69,6 +134,7 @@ function buildAudio(voice, root, fadeIn, volume) {
     return {
         preset,
         root,
+        brightness,
         master,
         filter,
         padGain,
@@ -89,7 +155,8 @@ function getProgress() {
 
 // Turns progress into sound across three phases: settling, steady and closing.
 function applyProgress(p) {
-    const b = audio.preset.brightness;
+    // The voice's brightness times the pad's.
+    const b = audio.preset.brightness * audio.brightness;
     let cutoff;
     let pad;
     let lift;
@@ -142,7 +209,8 @@ async function beginSession(event) {
     const choices = new FormData(setupForm);
     const length = choices.get("duration");
     const voice = choices.get("voice");
-    const root = Number(choices.get("tuning"));
+    const root = Number(choices.get("pitch"));
+    const brightness = Number(choices.get("brightness"));
     const fadeIn = clamp(Number(choices.get("fadeIn")), 1, 30);
     const volume = Number(choices.get("volume"));
     fadeOut = clamp(Number(choices.get("fadeOut")), 1, 30);
@@ -170,7 +238,7 @@ async function beginSession(event) {
         totalDuration = Temporal.Duration.from({ seconds: Number(length) });
     }
 
-    audio = buildAudio(voice, root, fadeIn, volume);
+    audio = buildAudio(voice, root, fadeIn, volume, brightness);
 
     tick();
     tickTimer = setInterval(tick, 250);
@@ -199,6 +267,32 @@ function endSession() {
 
 setupForm.addEventListener("submit", beginSession);
 endBtn.addEventListener("click", endSession);
+
+// Dragging on the pad, which keeps working if the pointer leaves the box mid drag.
+pad.addEventListener("pointerdown", (event) => {
+    pad.setPointerCapture(event.pointerId);
+    pressing = true;
+    startPreview();
+    padPoint(event);
+});
+pad.addEventListener("pointermove", (event) => {
+    if (pad.hasPointerCapture(event.pointerId)) padPoint(event);
+});
+pad.addEventListener("lostpointercapture", stopPreview);
+
+// Arrow keys move the pad too, and play the preview while held.
+pad.addEventListener("keydown", (event) => {
+    const moves = { ArrowLeft: [-0.05, 0], ArrowRight: [0.05, 0], ArrowUp: [0, -0.05], ArrowDown: [0, 0.05] };
+    const move = moves[event.key];
+    if (!move) return;
+    event.preventDefault();
+    pressing = true;
+    startPreview();
+    const x = Number(pad.style.getPropertyValue("--x")) + move[0];
+    const y = Number(pad.style.getPropertyValue("--y")) + move[1];
+    setPad(x, y);
+});
+pad.addEventListener("keyup", stopPreview);
 
 // Escape ends the session.
 document.addEventListener("keydown", (event) => {

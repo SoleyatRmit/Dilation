@@ -187,6 +187,67 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
 }
 
+/* The pad, with the dot placed from --x and --y. */
+.pad {
+    position: relative;
+    height: 150px;
+    border: 1px solid #2a2a30;
+    border-radius: 4px;
+    background: #111116;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.pad-dot {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    top: calc(var(--y) * 100%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #a0aac8;
+    border-radius: 50%;
+    translate: -50% -50%;
+    pointer-events: none;
+}
+
+/* Pad labels. */
+.pad-label {
+    position: absolute;
+    left: 0.6rem;
+    color: #5a5a62;
+    font-size: 0.75rem;
+    pointer-events: none;
+}
+
+.pad-top {
+    top: 0.5rem;
+}
+
+.pad-bottom {
+    bottom: 0.5rem;
+}
+
+.pad-axis {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0;
+    color: #5a5a62;
+    font-size: 0.75rem;
+}
+
+/* The pad lights up while you hold it or tab to it. */
+.pad:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
+.pad:active {
+    border-color: #6a6a78;
+}
+
+.pad:active .pad-dot {
+    background: #a0aac8;
+}
+
 #begin {
     width: 100%;
     padding: 1rem;
