@@ -24,6 +24,10 @@ let preview = null;
 let pressing = false;
 let sample = null;
 
+// The setup choices remembered between visits, and where the browser keeps them.
+const SAVE_KEY = "dilation-last-session";
+const SAVED_FIELDS = ["duration", "minutes", "seconds", "voice", "pitch", "brightness", "fadeIn", "fadeOut", "volume"];
+
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
     warningEl.textContent = "Temporal is not available in this browser and the polyfill did not load.";
@@ -105,6 +109,43 @@ function stopPreview() {
         old.osc2.stop();
         [old.osc1, old.osc2, old.filter, old.gain].forEach(node => node.dispose());
     }, 500);
+}
+
+// Saves the current choices in the browser. Private windows can refuse, and then nothing is saved.
+function saveSettings() {
+    const choices = new FormData(setupForm);
+    const saved = {};
+    SAVED_FIELDS.forEach(name => saved[name] = choices.get(name));
+    try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
+    } catch {
+        return;
+    }
+}
+
+// Puts last time's choices back into the form, including the dot on the pad.
+function restoreSettings() {
+    let saved = null;
+    try {
+        saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+    } catch {
+        return null;
+    }
+    if (!saved) return null;
+
+    for (const name of ["duration", "voice"]) {
+        const option = [...setupForm.elements[name]].find(input => input.value === saved[name]);
+        if (option) option.checked = true;
+    }
+    for (const name of ["minutes", "seconds", "fadeIn", "fadeOut", "volume"]) {
+        if (saved[name] != null) setupForm.elements[name].value = saved[name];
+    }
+    const pitch = Number(saved.pitch);
+    const brightness = Number(saved.brightness);
+    if (pitch > 0 && brightness > 0) {
+        setPad(Math.log(pitch / 65) / Math.log(165 / 65), 1.5 - brightness);
+    }
+    return saved;
 }
 
 // A short sample when a voice is picked, so you can hear it before you begin.
@@ -274,6 +315,7 @@ async function beginSession(event) {
         return;
     }
     warningEl.textContent = "";
+    saveSettings();
 
     startInstant = Temporal.Now.instant();
 
@@ -318,6 +360,8 @@ function endSession() {
         fading.nodes.forEach(node => node.dispose());
     }, (fadeOut + 0.5) * 1000);
 }
+
+restoreSettings();
 
 setupForm.addEventListener("submit", beginSession);
 endBtn.addEventListener("click", endSession);
