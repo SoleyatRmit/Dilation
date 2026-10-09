@@ -306,6 +306,40 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     margin-top: 1rem;
 }
 
+/* The quick start for returning users. */
+.repeat {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #2a2a30;
+}
+
+#repeat {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #6a6a78;
+    border-radius: 4px;
+    background: transparent;
+    color: #e8e8ea;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+#repeat:hover {
+    background: #1a1a20;
+}
+
+#repeat:focus-visible {
+    outline: 2px solid #6a6a78;
+}
+
+.repeat-summary {
+    margin: 0.5rem 0 0;
+    color: #8a8a92;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
 #begin {
     width: 100%;
     padding: 1rem;

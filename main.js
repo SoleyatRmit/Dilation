@@ -14,6 +14,8 @@ const warningEl = document.getElementById("warning");
 const pad = document.getElementById("pad");
 const pitchInput = setupForm.elements.pitch;
 const brightnessInput = setupForm.elements.brightness;
+const repeatBox = document.querySelector(".repeat");
+const repeatBtn = document.getElementById("repeat");
 
 let startInstant = null;
 let totalDuration = null;
@@ -32,6 +34,7 @@ const SAVED_FIELDS = ["duration", "minutes", "seconds", "voice", "pitch", "brigh
 if (typeof Temporal === "undefined") {
     warningEl.textContent = "Temporal is not available in this browser and the polyfill did not load.";
     beginBtn.disabled = true;
+    repeatBtn.disabled = true;
 }
 
 // The only visual thing JS does is set the state, and CSS handles the rest.
@@ -361,7 +364,25 @@ function endSession() {
     }, (fadeOut + 0.5) * 1000);
 }
 
-restoreSettings();
+// Returning users can start straight away instead of stepping through again.
+function showRepeat(saved) {
+    if (!saved) return;
+    const presets = { 20: "20 sec", 60: "1 min", 300: "5 min", 1200: "20 min" };
+    let length = presets[saved.duration];
+    if (saved.duration === "custom") {
+        const minutes = Number(saved.minutes);
+        const seconds = Number(saved.seconds);
+        length = [minutes ? minutes + " min" : "", seconds ? seconds + " sec" : ""].join(" ").trim() || "10 sec";
+    }
+    const voice = saved.voice.charAt(0).toUpperCase() + saved.voice.slice(1);
+    repeatBox.querySelector(".repeat-summary").textContent = `${length}, ${voice} voice`;
+    repeatBox.hidden = false;
+}
+
+showRepeat(restoreSettings());
+
+// Puts last time's choices back first, in case anything was changed on this step.
+repeatBtn.addEventListener("click", restoreSettings);
 
 setupForm.addEventListener("submit", beginSession);
 endBtn.addEventListener("click", endSession);
