@@ -22,6 +22,7 @@ let tickTimer = null;
 let fadeOut = 5;
 let preview = null;
 let pressing = false;
+let sample = null;
 
 // Need Temporal to work because Duhhhh.
 if (typeof Temporal === "undefined") {
@@ -104,6 +105,45 @@ function stopPreview() {
         old.osc2.stop();
         [old.osc1, old.osc2, old.filter, old.gain].forEach(node => node.dispose());
     }, 500);
+}
+
+// A short sample when a voice is picked, so you can hear it before you begin.
+async function playSample() {
+    if (document.body.dataset.state !== "idle") return;
+    if (!(await startSound())) return;
+
+    // Fade out any sample still playing so they don't pile up.
+    if (sample) {
+        sample.gain.gain.cancelAndHoldAtTime(Tone.now());
+        sample.gain.gain.linearRampTo(0, 0.1);
+    }
+
+    const choices = new FormData(setupForm);
+    const preset = VOICES[choices.get("voice")];
+    const pitch = Number(pitchInput.value);
+    const level = 0.2 * Number(choices.get("volume"));
+
+    const gain = new Tone.Gain(0).toDestination();
+    const filter = new Tone.Filter({ type: "lowpass", frequency: 900 * preset.brightness * Number(brightnessInput.value), Q: 1 }).connect(gain);
+    const osc1 = new Tone.Oscillator({ frequency: pitch, type: preset.wave }).connect(filter);
+    const osc2 = new Tone.Oscillator({ frequency: pitch * 1.004, type: preset.wave }).connect(filter);
+    osc1.start();
+    osc2.start();
+
+    // Rises, holds for a moment, then fades out by itself.
+    const now = Tone.now();
+    gain.gain.linearRampToValueAtTime(level, now + 0.15);
+    gain.gain.setValueAtTime(level, now + 0.9);
+    gain.gain.linearRampToValueAtTime(0, now + 1.5);
+
+    const playing = { gain };
+    sample = playing;
+    setTimeout(() => {
+        osc1.stop();
+        osc2.stop();
+        [osc1, osc2, filter, gain].forEach(node => node.dispose());
+        if (sample === playing) sample = null;
+    }, 1700);
 }
 
 // Two drones and a pad run through a lowpass filter and reverb, fading in from silence. Idk Claude mostly did this stuff. I'm a designer, idk anything about music.
@@ -307,6 +347,9 @@ pad.addEventListener("keydown", (event) => {
     setPad(x, y);
 });
 pad.addEventListener("keyup", stopPreview);
+
+// Picking a voice plays a short sample of it.
+setupForm.querySelectorAll('input[name="voice"]').forEach(input => input.addEventListener("change", playSample));
 
 // Escape ends the session.
 document.addEventListener("keydown", (event) => {
