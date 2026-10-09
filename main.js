@@ -56,10 +56,17 @@ function padPoint(event) {
     setPad((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
 }
 
+// Browsers only allow sound after a click. If it still can't start within 3 seconds, report it instead of hanging.
+async function startSound() {
+    const giveUp = new Promise(resolve => setTimeout(resolve, 3000));
+    await Promise.race([Tone.start(), giveUp]);
+    return Tone.context.state === "running";
+}
+
 // A quiet preview of the sound while the pad is held.
 async function startPreview() {
     if (document.body.dataset.state !== "idle" || preview) return;
-    await Tone.start();
+    if (!(await startSound())) return;
     if (!pressing || preview) return;
 
     const choices = new FormData(setupForm);
@@ -219,7 +226,14 @@ async function beginSession(event) {
     document.body.style.setProperty("--fade-out", fadeOut + "s");
 
     setState("running");
-    await Tone.start();
+
+    // If the sound can't start, go back to setup with a message instead of leaving an empty session.
+    if (!(await startSound())) {
+        setState("idle");
+        warningEl.textContent = "The sound couldn't start. Check that your device's sound is working, then press Begin again.";
+        return;
+    }
+    warningEl.textContent = "";
 
     startInstant = Temporal.Now.instant();
 
