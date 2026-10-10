@@ -407,6 +407,24 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     overflow: hidden;
 }
 
+/* The bell's glow: blooms when the bell rings, then fades with it. */
+.bell-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 205, 150, 0.45), transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+[data-bell] .bell-glow {
+    animation: bell-glow 4s ease-out forwards;
+}
+
+@keyframes bell-glow {
+    10% { opacity: 1; }
+    to { opacity: 0; }
+}
+
 /* Temporary wavy stuff for the session page */
 .defs {
     position: absolute;

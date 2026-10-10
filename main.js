@@ -279,6 +279,9 @@ function applyProgress(p) {
 // A soft bell two octaves above the drone, so it's in tune with any tuning.
 function ringBell() {
     audio.bell.triggerAttackRelease(audio.root * 4, 4);
+
+    // CSS shows the glow, so the ending is clear to anyone looking as well as listening.
+    document.body.dataset.bell = "";
 }
 
 // The sound's clock runs four times a second and keeps going in a background tab.
@@ -359,6 +362,7 @@ function endSession() {
 
     setTimeout(() => {
         setState("idle");
+        delete document.body.dataset.bell;
         fading.oscillators.forEach(osc => osc.stop());
         fading.nodes.forEach(node => node.dispose());
     }, (fadeOut + 0.5) * 1000);
