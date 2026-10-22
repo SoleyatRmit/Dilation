@@ -2,9 +2,9 @@
 
 // Each voice is a waveform plus a brightness that scales the filter.
 const VOICES = {
-    glass: { wave: "sine", brightness: 1.0 },
-    wood: { wave: "triangle", brightness: 0.8 },
-    air: { wave: "sawtooth", brightness: 0.5 }
+    glass: { wave: "sine", brightness: 1.0, hue: 195 },
+    wood: { wave: "triangle", brightness: 0.8, hue: 30 },
+    air: { wave: "sawtooth", brightness: 0.5, hue: 270 }
 };
 
 const setupForm = document.getElementById("setup");
@@ -311,6 +311,9 @@ async function beginSession(event) {
 
     // CSS reads this so the screen fades out over the same time as the sound.
     document.body.style.setProperty("--fade-out", fadeOut + "s");
+
+    // The session screen takes its colour from the voice: blue for Glass, amber for Wood, violet for Air.
+    document.body.style.setProperty("--hue", VOICES[voice].hue);
 
     setState("running");
 
