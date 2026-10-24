@@ -256,6 +256,22 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
 }
 
+/* Short hints under the fields, always on screen instead of hidden in a hover. */
+.hint {
+    margin: var(--space-3) 0 0;
+    color: var(--text-muted);
+    font-size: var(--text-small);
+    line-height: var(--leading);
+}
+
+.custom-hint {
+    display: none;
+}
+
+fieldset:has(input[value="custom"]:checked) .custom-hint {
+    display: block;
+}
+
 /* The pad, with the dot placed from --x and --y. */
 .pad {
     position: relative;
@@ -405,38 +421,6 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     margin-top: var(--space-4);
     color: var(--warning);
     font-size: var(--text-body);
-}
-
-/* Tooltips shows after a short hover, or instantly when using a keyboard. */
-.field {
-    position: relative;
-}
-
-.tip {
-    position: absolute;
-    bottom: calc(100% + var(--space-2));
-    left: 50%;
-    z-index: 1;
-    translate: -50% 0;
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--line-hover);
-    border-radius: var(--radius);
-    background: var(--surface-raised);
-    color: var(--text);
-    font-size: var(--text-small);
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity var(--motion-quick);
-}
-
-:is(.options label, .field):hover .tip {
-    opacity: 1;
-    transition-delay: 400ms;
-}
-
-:is(.options label, .field):has(:focus-visible) .tip {
-    opacity: 1;
 }
 
 /* session screen */

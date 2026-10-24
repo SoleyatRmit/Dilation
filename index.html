@@ -40,19 +40,20 @@
                     <label><input type="radio" name="duration" value="60"><span>1 min</span></label>
                     <label><input type="radio" name="duration" value="300"><span>5 min</span></label>
                     <label><input type="radio" name="duration" value="1200"><span>20 min</span></label>
-                    <label><input type="radio" name="duration" value="custom"><span>Custom</span><span class="tip">Your own minutes and seconds, at least 10 seconds</span></label>
+                    <label><input type="radio" name="duration" value="custom"><span>Custom</span></label>
                 </div>
                 <!-- Only shown when Custom is picked. -->
                 <div class="fields custom-length">
                     <label class="field">
-                        <input type="number" name="minutes" min="0" max="120" step="1" value="10">
+                        <input type="number" name="minutes" min="0" max="120" step="1" value="10" aria-describedby="custom-hint">
                         <span>min</span>
                     </label>
                     <label class="field">
-                        <input type="number" name="seconds" min="0" max="59" step="1" value="0">
+                        <input type="number" name="seconds" min="0" max="59" step="1" value="0" aria-describedby="custom-hint">
                         <span>sec</span>
                     </label>
                 </div>
+                <p class="hint custom-hint" id="custom-hint">Up to 120 minutes, and at least 10 seconds.</p>
                 <p class="step-nav">
                     <a class="next" href="#voice">Next</a>
                 </p>
@@ -98,17 +99,16 @@
                 <div class="fields">
                     <label class="field">
                         <span>In</span>
-                        <input type="number" name="fadeIn" min="1" max="30" step="1" value="4">
+                        <input type="number" name="fadeIn" min="1" max="30" step="1" value="4" aria-describedby="fades-hint">
                         <span>sec</span>
-                        <span class="tip">How long the sound takes to rise, 1 to 30 seconds</span>
                     </label>
                     <label class="field">
                         <span>Out</span>
-                        <input type="number" name="fadeOut" min="1" max="30" step="1" value="5">
+                        <input type="number" name="fadeOut" min="1" max="30" step="1" value="5" aria-describedby="fades-hint">
                         <span>sec</span>
-                        <span class="tip">How long the ending takes to fade, 1 to 30 seconds</span>
                     </label>
                 </div>
+                <p class="hint" id="fades-hint">How long the sound takes to rise at the start and fade at the end, 1 to 30 seconds each.</p>
                 <p class="step-nav">
                     <a href="#tone">Back</a>
                     <a class="next" href="#volume">Next</a>
