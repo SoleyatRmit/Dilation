@@ -37,6 +37,7 @@
     --space-6: 2rem;
     --space-7: 3rem;
     --space-8: 4rem;
+    --space-9: 6rem;
 
     /* Shapes */
     --radius: 4px;
@@ -296,7 +297,7 @@ fieldset:has(input[value="custom"]:checked) .custom-hint {
 /* The pad, with the dot placed from --x and --y. */
 .pad {
     position: relative;
-    height: 150px;
+    height: var(--pad-height, 10rem);
     border: 1px solid var(--line-control);
     border-radius: var(--radius);
     background: var(--surface);
@@ -442,6 +443,76 @@ fieldset:has(input[value="custom"]:checked) .custom-hint {
     margin-top: var(--space-4);
     color: var(--warning);
     font-size: var(--text-body);
+}
+
+/* Screen sizes. Medium (under 840px) is everything above, and each size up gets more room. */
+
+/* Expanded, 840px to 1199px: a wider column and a taller pad. */
+@media (min-width: 840px) {
+    #setup {
+        max-width: 34rem;
+        padding-top: var(--space-9);
+    }
+
+    .pad {
+        --pad-height: 11rem;
+    }
+}
+
+/* Large, 1200px to 1600px: the title and notice move beside the steps, so each step sits higher and nothing scrolls. */
+@media (min-width: 1200px) {
+    :root {
+        font-size: 106.25%;
+    }
+
+    #setup {
+        display: grid;
+        grid-template-columns: 18rem 30rem;
+        grid-template-areas:
+            "intro step"
+            "intro warning";
+        align-items: start;
+        justify-content: center;
+        column-gap: var(--space-9);
+        max-width: none;
+        padding-top: 18vh;
+    }
+
+    .intro {
+        grid-area: intro;
+    }
+
+    .step {
+        grid-area: step;
+    }
+
+    #warning {
+        grid-area: warning;
+    }
+
+    .notice {
+        margin-bottom: 0;
+    }
+
+    .pad {
+        --pad-height: 12rem;
+    }
+}
+
+/* Extra-large, over 1600px: everything scales up a little for big screens seen from further away. */
+@media (min-width: 1601px) {
+    :root {
+        font-size: 112.5%;
+    }
+
+    #setup {
+        grid-template-columns: 20rem 32rem;
+        column-gap: 8rem;
+    }
+
+    .pad {
+        --pad-height: 14rem;
+    }
 }
 
 /* session screen */
