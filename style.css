@@ -2,16 +2,63 @@
     box-sizing: border-box;
 }
 
+/* Design tokens. Every colour, size, gap and timing is set here once and used by name below. */
 :root {
     color-scheme: dark;
+
+    /* Colours */
+    --bg: #0d0d10;
+    --surface: #111116;
+    --surface-raised: #1a1a20;
+    --text: #e8e8ea;
+    --text-soft: #a8a8b2;
+    --text-muted: #8a8a92;
+    --text-faint: #5a5a62;
+    --line: #2a2a30;
+    --line-hover: #3a3a44;
+    --line-strong: #6a6a78;
+    --accent: #a0aac8;
+    --warning: #cc8888;
+    --bell-glow: rgb(255 205 150 / 0.45);
+    --hue: 225;
+
+    /* Type */
+    --font: system-ui, sans-serif;
+    --text-title: 1.5rem;
+    --text-body: 0.9rem;
+    --text-small: 0.8rem;
+    --text-tiny: 0.75rem;
+    --leading: 1.5;
+
+    /* Spacing, one scale for every gap and padding */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+
+    /* Shapes */
+    --radius: 4px;
+    --radius-small: 3px;
+    --focus: 2px solid var(--line-strong);
+
+    /* Motion */
+    --ease: ease;
+    --motion-quick: 150ms;
+    --motion-step: 400ms;
+    --motion-screen: 800ms;
+    --dim-after: 30s;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: #0d0d10;
-    color: #e8e8ea;
-    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
 }
 
 /* Show the screen that's going on right now */
@@ -28,36 +75,36 @@ body {
 /* setup screen */
 
 #setup {
-    max-width: 480px;
+    max-width: 30rem;
     margin: 0 auto;
-    padding: 4rem 1.5rem;
+    padding: var(--space-8) var(--space-5);
 }
 
 h1 {
-    margin: 0 0 0.5rem;
-    font-size: 1.5rem;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-title);
     font-weight: 400;
 }
 
 .sub {
-    margin: 0 0 2rem;
-    color: #8a8a92;
-    font-size: 0.9rem;
+    margin: 0 0 var(--space-6);
+    color: var(--text-muted);
+    font-size: var(--text-body);
 }
 
 .notice {
-    margin: 0 0 3rem;
-    padding: 0.9rem 1rem;
-    border: 1px solid #2a2a30;
-    border-left: 2px solid #6a6a78;
-    border-radius: 4px;
-    color: #a8a8b2;
-    font-size: 0.85rem;
-    line-height: 1.5;
+    margin: 0 0 var(--space-7);
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text-soft);
+    font-size: var(--text-body);
+    line-height: var(--leading);
 }
 
 fieldset {
-    margin: 0 0 2rem;
+    margin: 0 0 var(--space-6);
     padding: 0;
     border: none;
 }
@@ -73,10 +120,10 @@ fieldset {
 }
 
 legend {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--space-3);
     padding: 0;
-    color: #8a8a92;
-    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-size: var(--text-small);
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
@@ -84,7 +131,7 @@ legend {
 .options {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .options label {
@@ -102,60 +149,61 @@ legend {
 .options input + span {
     display: block;
     flex: 1;
-    padding: 0.7rem 0.5rem;
-    border: 1px solid #2a2a30;
-    border-radius: 4px;
-    font-size: 0.9rem;
+    padding: var(--space-3) var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: var(--text-body);
     text-align: center;
     cursor: pointer;
+    transition: border-color var(--motion-quick) var(--ease), background-color var(--motion-quick) var(--ease);
 }
 
 /* Hover states. */
 .options input:not(:checked) + span:hover,
 .field input:hover {
-    border-color: #3a3a44;
+    border-color: var(--line-hover);
 }
 
 /* Voice descriptions, shown under each name instead of in a hover tooltip. */
 .options .desc {
     display: block;
-    margin-top: 0.25rem;
-    color: #8a8a92;
-    font-size: 0.75rem;
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--text-tiny);
 }
 
 .options input:checked + span {
-    border-color: #6a6a78;
-    background: #1a1a20;
+    border-color: var(--line-strong);
+    background: var(--surface-raised);
 }
 
 .options input:focus-visible + span {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 /* Number fields, used for a custom length and the fades. */
 .field {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    color: #8a8a92;
-    font-size: 0.9rem;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    color: var(--text-muted);
+    font-size: var(--text-body);
 }
 
 .field input {
     width: 4.5rem;
-    padding: 0.55rem 0.5rem;
-    border: 1px solid #2a2a30;
-    border-radius: 4px;
+    padding: var(--space-3) var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
     background: transparent;
-    color: #e8e8ea;
+    color: var(--text);
     font: inherit;
     text-align: center;
 }
 
 .field input:focus-visible {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 /* Up and down arrows on every number field. */
@@ -164,7 +212,7 @@ input[type="number"]::-webkit-inner-spin-button {
     appearance: none;
     width: 10px;
     height: 20px;
-    margin-left: 0.5rem;
+    margin-left: var(--space-2);
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='20' viewBox='0 0 10 20'%3E%3Cpath d='M2 6 L5 3 L8 6' fill='none' stroke='%23a0aac8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M2 14 L5 17 L8 14' fill='none' stroke='%23a0aac8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
     opacity: 0.45;
     cursor: pointer;
@@ -185,12 +233,12 @@ input[type="number"]:focus::-webkit-inner-spin-button {
     width: auto;
     padding: 0;
     border: none;
-    accent-color: #a0aac8;
+    accent-color: var(--accent);
 }
 
 .fields {
     display: flex;
-    gap: 2rem;
+    gap: var(--space-6);
 }
 
 .fields .field {
@@ -200,7 +248,7 @@ input[type="number"]:focus::-webkit-inner-spin-button {
 /* The custom length fields only appear when Custom is clicked. */
 .custom-length {
     display: none;
-    margin-top: 0.75rem;
+    margin-top: var(--space-3);
 }
 
 fieldset:has(input[value="custom"]:checked) .custom-length {
@@ -211,9 +259,9 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 .pad {
     position: relative;
     height: 150px;
-    border: 1px solid #2a2a30;
-    border-radius: 4px;
-    background: #111116;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
     cursor: crosshair;
     touch-action: none;
 }
@@ -224,7 +272,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     top: calc(var(--y) * 100%);
     width: 16px;
     height: 16px;
-    border: 2px solid #a0aac8;
+    border: 2px solid var(--accent);
     border-radius: 50%;
     translate: -50% -50%;
     pointer-events: none;
@@ -233,69 +281,70 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 /* Pad labels. */
 .pad-label {
     position: absolute;
-    left: 0.6rem;
-    color: #5a5a62;
-    font-size: 0.75rem;
+    left: var(--space-2);
+    color: var(--text-faint);
+    font-size: var(--text-tiny);
     pointer-events: none;
 }
 
 .pad-top {
-    top: 0.5rem;
+    top: var(--space-2);
 }
 
 .pad-bottom {
-    bottom: 0.5rem;
+    bottom: var(--space-2);
 }
 
 .pad-axis {
     display: flex;
     justify-content: space-between;
-    margin: 0.4rem 0 0;
-    color: #5a5a62;
-    font-size: 0.75rem;
+    margin: var(--space-2) 0 0;
+    color: var(--text-faint);
+    font-size: var(--text-tiny);
 }
 
 /* The pad lights up while you hold it or tab to it. */
 .pad:focus-visible {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 .pad:active {
-    border-color: #6a6a78;
+    border-color: var(--line-strong);
 }
 
 .pad:active .pad-dot {
-    background: #a0aac8;
+    background: var(--accent);
 }
 
 /* Step counter. */
 .count {
-    margin-left: 0.5rem;
-    color: #5a5a62;
+    margin-left: var(--space-2);
+    color: var(--text-faint);
 }
 
 /* Next and Back, with Next always on the right. */
 .step-nav {
     display: flex;
-    gap: 0.5rem;
-    margin: 1.5rem 0 0;
+    gap: var(--space-2);
+    margin: var(--space-5) 0 0;
 }
 
 .step-nav a {
-    padding: 0.6rem 1.2rem;
-    border: 1px solid #2a2a30;
-    border-radius: 4px;
-    color: #e8e8ea;
-    font-size: 0.9rem;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: var(--text-body);
     text-decoration: none;
+    transition: background-color var(--motion-quick) var(--ease);
 }
 
 .step-nav a:hover {
-    background: #1a1a20;
+    background: var(--surface-raised);
 }
 
 .step-nav a:focus-visible {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 .step-nav .next {
@@ -303,56 +352,58 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 }
 
 .step #begin {
-    margin-top: 1rem;
+    margin-top: var(--space-4);
 }
 
 /* The quick start for returning users. */
 .repeat {
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid #2a2a30;
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
 }
 
 #repeat {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #6a6a78;
-    border-radius: 4px;
+    padding: var(--space-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
     background: transparent;
-    color: #e8e8ea;
+    color: var(--text);
     font: inherit;
-    font-size: 0.9rem;
+    font-size: var(--text-body);
     cursor: pointer;
+    transition: background-color var(--motion-quick) var(--ease);
 }
 
 #repeat:hover {
-    background: #1a1a20;
+    background: var(--surface-raised);
 }
 
 #repeat:focus-visible {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 .repeat-summary {
-    margin: 0.5rem 0 0;
-    color: #8a8a92;
-    font-size: 0.8rem;
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+    font-size: var(--text-small);
     text-align: center;
 }
 
 #begin {
     width: 100%;
-    padding: 1rem;
-    border: 1px solid #6a6a78;
-    border-radius: 4px;
+    padding: var(--space-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
     background: transparent;
-    color: #e8e8ea;
+    color: var(--text);
     font: inherit;
     cursor: pointer;
+    transition: background-color var(--motion-quick) var(--ease);
 }
 
 #begin:hover {
-    background: #1a1a20;
+    background: var(--surface-raised);
 }
 
 #begin:disabled {
@@ -361,9 +412,9 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 }
 
 #warning {
-    margin-top: 1rem;
-    color: #cc8888;
-    font-size: 0.85rem;
+    margin-top: var(--space-4);
+    color: var(--warning);
+    font-size: var(--text-body);
 }
 
 /* Tooltips shows after a short hover, or instantly when using a keyboard. */
@@ -373,20 +424,20 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 
 .tip {
     position: absolute;
-    bottom: calc(100% + 0.5rem);
+    bottom: calc(100% + var(--space-2));
     left: 50%;
     z-index: 1;
     translate: -50% 0;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid #3a3a44;
-    border-radius: 4px;
-    background: #1a1a20;
-    color: #c8c8d0;
-    font-size: 0.75rem;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--line-hover);
+    border-radius: var(--radius);
+    background: var(--surface-raised);
+    color: var(--text);
+    font-size: var(--text-tiny);
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 150ms;
+    transition: opacity var(--motion-quick);
 }
 
 :is(.options label, .field):hover .tip {
@@ -412,14 +463,14 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 55%, hsl(var(--hue, 225) 45% 32% / 0.4), transparent 70%);
+    background: radial-gradient(ellipse at 50% 55%, hsl(var(--hue) 45% 32% / 0.4), transparent 70%);
 }
 
 /* The bell's glow: blooms when the bell rings, then fades with it. */
 .bell-glow {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(255, 205, 150, 0.45), transparent 70%);
+    background: radial-gradient(circle at 50% 50%, var(--bell-glow), transparent 70%);
     opacity: 0;
     pointer-events: none;
 }
@@ -443,7 +494,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 .waves {
     position: absolute;
     inset: 0;
-    animation: dim 3s ease 30s forwards;
+    animation: dim 3s var(--ease) var(--dim-after) forwards;
 }
 
 .wave {
@@ -451,7 +502,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     left: 0;
     width: 200%;
     fill: none;
-    stroke: hsl(var(--hue, 225) 55% 72%);
+    stroke: hsl(var(--hue) 55% 72%);
     stroke-width: 1.5;
     opacity: var(--strength);
     animation:
@@ -469,23 +520,23 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 }
 
 @keyframes bob {
-    to { translate: 0 1.5rem; }
+    to { translate: 0 var(--space-5); }
 }
 
 #end {
     position: fixed;
-    bottom: 2rem;
+    bottom: var(--space-6);
     left: 50%;
     transform: translateX(-50%);
-    padding: 0.7rem 1.5rem;
-    border: 1px solid #3a3a44;
-    border-radius: 4px;
-    background: rgba(13, 13, 16, 0.85);
-    color: #e8e8ea;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--line-hover);
+    border-radius: var(--radius);
+    background: rgb(13 13 16 / 0.85);
+    color: var(--text);
     font: inherit;
-    font-size: 0.9rem;
+    font-size: var(--text-body);
     cursor: pointer;
-    animation: fade-end 2s ease 30s forwards;
+    animation: fade-end 2s var(--ease) var(--dim-after) forwards;
 }
 
 /* After 30 seconds the waves and End button dim, and hovering End brings it back. */
@@ -499,13 +550,13 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 
 /* Esc hint on the End button. */
 #end kbd {
-    margin-left: 0.5rem;
-    padding: 0.1rem 0.35rem;
-    border: 1px solid #3a3a44;
-    border-radius: 3px;
-    color: #8a8a92;
+    margin-left: var(--space-2);
+    padding: 0.1rem var(--space-1);
+    border: 1px solid var(--line-hover);
+    border-radius: var(--radius-small);
+    color: var(--text-muted);
     font: inherit;
-    font-size: 0.75rem;
+    font-size: var(--text-tiny);
 }
 
 #end:hover,
@@ -515,7 +566,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 }
 
 #end:focus-visible {
-    outline: 2px solid #6a6a78;
+    outline: var(--focus);
 }
 
 /* Ending swaps the label, blocks clicks and fades to black along with the sound. */
@@ -547,12 +598,12 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     }
 
     [data-state="idle"] #setup {
-        animation: fade-in 800ms ease both;
+        animation: fade-in var(--motion-screen) var(--ease) both;
     }
 
     /* Steps fade in too. */
     .step:target {
-        animation: fade-in 400ms ease both;
+        animation: fade-in var(--motion-step) var(--ease) both;
     }
 }
 
