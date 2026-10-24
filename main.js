@@ -420,6 +420,23 @@ pad.addEventListener("keydown", (event) => {
 });
 pad.addEventListener("keyup", stopPreview);
 
+// The minus and plus buttons beside each number. Holding one keeps counting, and typing or the arrow keys still work.
+document.querySelectorAll(".number button").forEach(button => {
+    const input = button.parentElement.querySelector("input");
+    let hold = null;
+    const nudge = () => button.classList.contains("more") ? input.stepUp() : input.stepDown();
+    const repeat = (delay) => hold = setTimeout(() => { nudge(); repeat(80); }, delay);
+    const stop = () => clearTimeout(hold);
+
+    button.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        input.focus();
+        nudge();
+        repeat(400);
+    });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(type => button.addEventListener(type, stop));
+});
+
 // Picking a voice plays a short sample of it.
 setupForm.querySelectorAll('input[name="voice"]').forEach(input => input.addEventListener("change", playSample));
 

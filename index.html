@@ -45,11 +45,19 @@
                 <!-- Only shown when Custom is picked. -->
                 <div class="fields custom-length">
                     <label class="field">
-                        <input type="number" name="minutes" min="0" max="120" step="1" value="10" aria-describedby="custom-hint">
+                        <span class="number">
+                            <button type="button" class="less" tabindex="-1" aria-hidden="true">&minus;</button>
+                            <input type="number" name="minutes" min="0" max="120" step="1" value="10" aria-describedby="custom-hint">
+                            <button type="button" class="more" tabindex="-1" aria-hidden="true">+</button>
+                        </span>
                         <span>min</span>
                     </label>
                     <label class="field">
-                        <input type="number" name="seconds" min="0" max="59" step="1" value="0" aria-describedby="custom-hint">
+                        <span class="number">
+                            <button type="button" class="less" tabindex="-1" aria-hidden="true">&minus;</button>
+                            <input type="number" name="seconds" min="0" max="59" step="1" value="0" aria-describedby="custom-hint">
+                            <button type="button" class="more" tabindex="-1" aria-hidden="true">+</button>
+                        </span>
                         <span>sec</span>
                     </label>
                 </div>
@@ -99,12 +107,20 @@
                 <div class="fields">
                     <label class="field">
                         <span>In</span>
-                        <input type="number" name="fadeIn" min="1" max="30" step="1" value="4" aria-describedby="fades-hint">
+                        <span class="number">
+                            <button type="button" class="less" tabindex="-1" aria-hidden="true">&minus;</button>
+                            <input type="number" name="fadeIn" min="1" max="30" step="1" value="4" aria-describedby="fades-hint">
+                            <button type="button" class="more" tabindex="-1" aria-hidden="true">+</button>
+                        </span>
                         <span>sec</span>
                     </label>
                     <label class="field">
                         <span>Out</span>
-                        <input type="number" name="fadeOut" min="1" max="30" step="1" value="5" aria-describedby="fades-hint">
+                        <span class="number">
+                            <button type="button" class="less" tabindex="-1" aria-hidden="true">&minus;</button>
+                            <input type="number" name="fadeOut" min="1" max="30" step="1" value="5" aria-describedby="fades-hint">
+                            <button type="button" class="more" tabindex="-1" aria-hidden="true">+</button>
+                        </span>
                         <span>sec</span>
                     </label>
                 </div>
