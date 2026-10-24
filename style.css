@@ -13,10 +13,9 @@
     --text: #e8e8ea;
     --text-soft: #a8a8b2;
     --text-muted: #8a8a92;
-    --text-faint: #5a5a62;
     --line: #2a2a30;
-    --line-hover: #3a3a44;
-    --line-strong: #6a6a78;
+    --line-control: #666672;
+    --line-hover: #8a8a96;
     --accent: #a0aac8;
     --warning: #cc8888;
     --bell-glow: rgb(255 205 150 / 0.45);
@@ -27,7 +26,6 @@
     --text-title: 1.5rem;
     --text-body: 0.9rem;
     --text-small: 0.8rem;
-    --text-tiny: 0.75rem;
     --leading: 1.5;
 
     /* Spacing, one scale for every gap and padding */
@@ -43,7 +41,7 @@
     /* Shapes */
     --radius: 4px;
     --radius-small: 3px;
-    --focus: 2px solid var(--line-strong);
+    --focus: 2px solid var(--accent);
 
     /* Motion */
     --ease: ease;
@@ -51,6 +49,12 @@
     --motion-step: 400ms;
     --motion-screen: 800ms;
     --dim-after: 30s;
+}
+
+/* One focus ring for everything you can tab to. */
+:focus-visible {
+    outline: var(--focus);
+    outline-offset: 2px;
 }
 
 body {
@@ -96,7 +100,7 @@ h1 {
     margin: 0 0 var(--space-7);
     padding: var(--space-4);
     border: 1px solid var(--line);
-    border-left: 2px solid var(--line-strong);
+    border-left: 2px solid var(--line-control);
     border-radius: var(--radius);
     color: var(--text-soft);
     font-size: var(--text-body);
@@ -122,7 +126,7 @@ fieldset {
 legend {
     margin-bottom: var(--space-3);
     padding: 0;
-    color: var(--text-muted);
+    color: var(--text-soft);
     font-size: var(--text-small);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -150,7 +154,7 @@ legend {
     display: block;
     flex: 1;
     padding: var(--space-3) var(--space-2);
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius);
     font-size: var(--text-body);
     text-align: center;
@@ -169,16 +173,17 @@ legend {
     display: block;
     margin-top: var(--space-1);
     color: var(--text-muted);
-    font-size: var(--text-tiny);
+    font-size: var(--text-small);
 }
 
 .options input:checked + span {
-    border-color: var(--line-strong);
+    border-color: var(--accent);
     background: var(--surface-raised);
 }
 
 .options input:focus-visible + span {
     outline: var(--focus);
+    outline-offset: 2px;
 }
 
 /* Number fields, used for a custom length and the fades. */
@@ -194,16 +199,12 @@ legend {
 .field input {
     width: 4.5rem;
     padding: var(--space-3) var(--space-2);
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius);
     background: transparent;
     color: var(--text);
     font: inherit;
     text-align: center;
-}
-
-.field input:focus-visible {
-    outline: var(--focus);
 }
 
 /* Up and down arrows on every number field. */
@@ -259,7 +260,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 .pad {
     position: relative;
     height: 150px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius);
     background: var(--surface);
     cursor: crosshair;
@@ -282,8 +283,8 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 .pad-label {
     position: absolute;
     left: var(--space-2);
-    color: var(--text-faint);
-    font-size: var(--text-tiny);
+    color: var(--text-muted);
+    font-size: var(--text-small);
     pointer-events: none;
 }
 
@@ -299,17 +300,13 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     display: flex;
     justify-content: space-between;
     margin: var(--space-2) 0 0;
-    color: var(--text-faint);
-    font-size: var(--text-tiny);
+    color: var(--text-muted);
+    font-size: var(--text-small);
 }
 
-/* The pad lights up while you hold it or tab to it. */
-.pad:focus-visible {
-    outline: var(--focus);
-}
-
+/* The pad lights up while you hold it. */
 .pad:active {
-    border-color: var(--line-strong);
+    border-color: var(--accent);
 }
 
 .pad:active .pad-dot {
@@ -319,7 +316,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 /* Step counter. */
 .count {
     margin-left: var(--space-2);
-    color: var(--text-faint);
+    color: var(--text-muted);
 }
 
 /* Next and Back, with Next always on the right. */
@@ -331,7 +328,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 
 .step-nav a {
     padding: var(--space-3) var(--space-5);
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius);
     color: var(--text);
     font-size: var(--text-body);
@@ -340,11 +337,8 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 }
 
 .step-nav a:hover {
+    border-color: var(--line-hover);
     background: var(--surface-raised);
-}
-
-.step-nav a:focus-visible {
-    outline: var(--focus);
 }
 
 .step-nav .next {
@@ -365,7 +359,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 #repeat {
     width: 100%;
     padding: var(--space-3);
-    border: 1px solid var(--line-strong);
+    border: 1px solid var(--accent);
     border-radius: var(--radius);
     background: transparent;
     color: var(--text);
@@ -379,10 +373,6 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     background: var(--surface-raised);
 }
 
-#repeat:focus-visible {
-    outline: var(--focus);
-}
-
 .repeat-summary {
     margin: var(--space-2) 0 0;
     color: var(--text-muted);
@@ -393,7 +383,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 #begin {
     width: 100%;
     padding: var(--space-4);
-    border: 1px solid var(--line-strong);
+    border: 1px solid var(--accent);
     border-radius: var(--radius);
     background: transparent;
     color: var(--text);
@@ -433,7 +423,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     border-radius: var(--radius);
     background: var(--surface-raised);
     color: var(--text);
-    font-size: var(--text-tiny);
+    font-size: var(--text-small);
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
@@ -529,7 +519,7 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     left: 50%;
     transform: translateX(-50%);
     padding: var(--space-3) var(--space-5);
-    border: 1px solid var(--line-hover);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius);
     background: rgb(13 13 16 / 0.85);
     color: var(--text);
@@ -552,21 +542,17 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
 #end kbd {
     margin-left: var(--space-2);
     padding: 0.1rem var(--space-1);
-    border: 1px solid var(--line-hover);
+    border: 1px solid var(--line-control);
     border-radius: var(--radius-small);
     color: var(--text-muted);
     font: inherit;
-    font-size: var(--text-tiny);
+    font-size: var(--text-small);
 }
 
 #end:hover,
 #end:focus-visible {
     animation: none;
     opacity: 1;
-}
-
-#end:focus-visible {
-    outline: var(--focus);
 }
 
 /* Ending swaps the label, blocks clicks and fades to black along with the sound. */
@@ -604,6 +590,17 @@ fieldset:has(input[value="custom"]:checked) .custom-length {
     /* Steps fade in too. */
     .step:target {
         animation: fade-in var(--motion-step) var(--ease) both;
+    }
+}
+
+/* Stronger text and edges for people who ask for more contrast in their system settings. */
+@media (prefers-contrast: more) {
+    :root {
+        --text-soft: #d0d0d6;
+        --text-muted: #b4b4bc;
+        --line: #55555f;
+        --line-control: #9a9aa6;
+        --line-hover: #c0c0c8;
     }
 }
 
