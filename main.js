@@ -16,6 +16,7 @@ const pitchInput = setupForm.elements.pitch;
 const brightnessInput = setupForm.elements.brightness;
 const repeatBox = document.querySelector(".repeat");
 const repeatBtn = document.getElementById("repeat");
+const announceEl = document.getElementById("announce");
 
 let startInstant = null;
 let totalDuration = null;
@@ -40,6 +41,17 @@ if (typeof Temporal === "undefined") {
 // The only visual thing JS does is set the state, and CSS handles the rest.
 function setState(state) {
     document.body.dataset.state = state;
+}
+
+// Tells screen readers what just happened, since a change of screen makes no sound for them.
+function announce(message) {
+    announceEl.textContent = message;
+}
+
+// Puts focus on the step that's showing, so screen readers read its name and Tab carries on from there.
+function focusStep() {
+    const step = document.querySelector(".step:target") || document.querySelector(".step");
+    step.focus();
 }
 
 // Keeps a typed number whole and within range, using the minimum if it's empty.
@@ -325,6 +337,7 @@ async function beginSession(event) {
     }
     warningEl.textContent = "";
     saveSettings();
+    announce(`Session started, ${summarise(Object.fromEntries(choices))}. Press Escape to end it.`);
 
     startInstant = Temporal.Now.instant();
 
@@ -355,6 +368,7 @@ function endSession() {
 
     setState("ending");
     clearInterval(tickTimer);
+    announce("bell" in document.body.dataset ? "Time's up. The sound is fading out." : "Ending the session.");
 
     const fading = audio;
     audio = null;
@@ -366,23 +380,30 @@ function endSession() {
     setTimeout(() => {
         setState("idle");
         delete document.body.dataset.bell;
+        announce("Session over. You're back at the setup.");
+        focusStep();
         fading.oscillators.forEach(osc => osc.stop());
         fading.nodes.forEach(node => node.dispose());
     }, (fadeOut + 0.5) * 1000);
 }
 
+// A short summary of the choices, like "5 min, Glass voice".
+function summarise(settings) {
+    const presets = { 20: "20 sec", 60: "1 min", 300: "5 min", 1200: "20 min" };
+    let length = presets[settings.duration];
+    if (settings.duration === "custom") {
+        const minutes = Number(settings.minutes);
+        const seconds = Number(settings.seconds);
+        length = minutes * 60 + seconds < 10 ? "10 sec" : [minutes ? minutes + " min" : "", seconds ? seconds + " sec" : ""].join(" ").trim();
+    }
+    const voice = settings.voice.charAt(0).toUpperCase() + settings.voice.slice(1);
+    return `${length}, ${voice} voice`;
+}
+
 // Returning users can start straight away instead of stepping through again.
 function showRepeat(saved) {
     if (!saved) return;
-    const presets = { 20: "20 sec", 60: "1 min", 300: "5 min", 1200: "20 min" };
-    let length = presets[saved.duration];
-    if (saved.duration === "custom") {
-        const minutes = Number(saved.minutes);
-        const seconds = Number(saved.seconds);
-        length = [minutes ? minutes + " min" : "", seconds ? seconds + " sec" : ""].join(" ").trim() || "10 sec";
-    }
-    const voice = saved.voice.charAt(0).toUpperCase() + saved.voice.slice(1);
-    repeatBox.querySelector(".repeat-summary").textContent = `${length}, ${voice} voice`;
+    repeatBox.querySelector(".repeat-summary").textContent = summarise(saved);
     repeatBox.hidden = false;
 }
 
@@ -392,6 +413,7 @@ showRepeat(restoreSettings());
 repeatBtn.addEventListener("click", restoreSettings);
 
 setupForm.addEventListener("submit", beginSession);
+addEventListener("hashchange", focusStep);
 endBtn.addEventListener("click", endSession);
 
 // Dragging on the pad, which keeps working if the pointer leaves the box mid drag.

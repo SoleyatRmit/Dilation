@@ -36,7 +36,7 @@
             </div>
 
             <!-- Steps, one shown at a time. -->
-            <fieldset class="step" id="length">
+            <fieldset class="step" id="length" tabindex="-1">
                 <legend>Length <span class="count">1 of 5</span></legend>
                 <div class="options">
                     <label><input type="radio" name="duration" value="20" checked><span>20 sec</span></label>
@@ -75,7 +75,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="step" id="voice">
+            <fieldset class="step" id="voice" tabindex="-1">
                 <legend>Voice <span class="count">2 of 5</span></legend>
                 <div class="options">
                     <label><input type="radio" name="voice" value="glass" checked><span>Glass<small class="desc">Soft, like a singing bowl</small></span></label>
@@ -88,7 +88,7 @@
                 </p>
             </fieldset>
 
-            <fieldset class="step" id="tone">
+            <fieldset class="step" id="tone" tabindex="-1">
                 <legend>Tone <span class="count">3 of 5</span></legend>
                 <!-- Pad: left to right is pitch, up and down is brightness. -->
                 <div class="pad" id="pad" style="--x: 0.565; --y: 0.5" tabindex="0" aria-label="Tone pad. Arrow keys change pitch and brightness.">
@@ -105,7 +105,7 @@
                 </p>
             </fieldset>
 
-            <fieldset class="step" id="fades">
+            <fieldset class="step" id="fades" tabindex="-1">
                 <legend>Fades <span class="count">4 of 5</span></legend>
                 <div class="fields">
                     <label class="field">
@@ -134,7 +134,7 @@
                 </p>
             </fieldset>
             <!-- Volume -->
-            <fieldset class="step" id="volume">
+            <fieldset class="step" id="volume" tabindex="-1">
                 <legend>Volume <span class="count">5 of 5</span></legend>
                 <label class="field volume">
                     <span>Quiet</span>
@@ -173,6 +173,9 @@
                 <span class="label-ending">Ending</span>
             </button>
         </div>
+
+        <!-- Hidden, but screen readers read out what's written here. -->
+        <p id="announce" class="visually-hidden" role="status"></p>
     </main>
 
 </body>

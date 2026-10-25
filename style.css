@@ -119,6 +119,11 @@ fieldset {
     display: none;
 }
 
+/* Steps get focus so screen readers read their name, but they don't need a ring. */
+.step:focus-visible {
+    outline: none;
+}
+
 .step:target,
 #setup:not(:has(.step:target)) .step:first-of-type {
     display: block;
@@ -443,6 +448,16 @@ fieldset:has(input[value="custom"]:checked) .custom-hint {
     margin-top: var(--space-4);
     color: var(--warning);
     font-size: var(--text-body);
+}
+
+/* Hidden on screen but still read by screen readers. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 /* Screen sizes. Medium (under 840px) is everything above, and each size up gets more room. */
